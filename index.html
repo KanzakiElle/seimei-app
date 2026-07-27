@@ -5,125 +5,207 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>安倍晴明・現代六壬神課EX</title>
+  <title>安倍晴明・六壬神課式盤</title>
   <style>
-    body { background: #090a16; color: #e2e8f0; font-family: sans-serif; padding: 20px; text-align: center; margin: 0; }
-    body.flash-active { animation: screenGlow 1.2s ease-out; }
-    @keyframes screenGlow {
-      0% { background: #090a16; }
-      20% { background: #2e1065; box-shadow: inset 0 0 100px rgba(168,85,247,0.8); }
-      100% { background: #090a16; }
+    body {
+      background: #141311; /* 和風の漆黒 */
+      color: #e5e1da;
+      font-family: 'Hiragino Mincho ProN', 'MS Mincho', serif;
+      padding: 15px;
+      text-align: center;
+      margin: 0;
+      overflow-x: hidden;
     }
     .app-container { max-width: 500px; margin: 0 auto; }
-    h1 { font-size: 1.5rem; color: #c084fc; text-shadow: 0 0 10px rgba(192,132,252,0.5); }
-    .subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 25px; }
-    #spell-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9,10,22,0.95);
+    h1 { font-size: 1.4rem; color: #d4af37; text-shadow: 0 0 5px rgba(212,175,55,0.3); margin-bottom: 0; }
+    .subtitle { font-size: 0.75rem; color: #a8a297; margin-top: 5px; margin-bottom: 20px; letter-spacing: 2px; }
+
+    /* 日本画風・六壬式盤のデザイン */
+    .shikiban-area {
+      position: relative; width: 260px; height: 260px; margin: 0 auto 20px auto;
+      background: #f1ebd9; border: 8px solid #3a352a; border-radius: 12px; /* 地盤（方形） */
+      box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 0 30px rgba(40,30,10,0.2);
+      display: flex; justify-content: center; align-items: center;
+    }
+    /* 回転する天盤（円形） */
+    .tenban {
+      width: 200px; height: 200px; border: 4px solid #5c1e1e; border-radius: 50%;
+      background: #eddcb9; box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      position: relative; transition: transform 2.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .tenban-center {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 40px; height: 40px; border-radius: 50%; background: #3a352a; color: #eddcb9;
+      font-size: 0.7rem; line-height: 40px; font-weight: bold;
+    }
+    /* 式盤の文字配置用 */
+    .jishi-label {
+      position: absolute; width: 20px; height: 20px; font-size: 0.85rem; font-weight: bold;
+      color: #2b251a; text-align: center; line-height: 20px;
+    }
+
+    /* 呪文演出カットイン */
+    #spell-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(20,19,17,0.95);
       display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
     }
-    #spell-overlay.show { opacity: 1; }
-    .spell-text { font-size: 2.3rem; font-weight: bold; color: #ef4444; margin: 10px; letter-spacing: 6px; text-shadow: 0 0 15px #ef4444; }
-    button {
-      background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: 2px solid #c084fc;
-      padding: 18px 30px; font-size: 1.1rem; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer;
+    #spell-screen.show { opacity: 1; }
+    .spell-word { font-size: 2.2rem; font-weight: bold; color: #b22222; margin: 10px; letter-spacing: 10px; writing-mode: vertical-rl; text-shadow: 0 0 8px #b22222; }
+
+    /* 陰陽道の召喚ボタン */
+    .divine-btn {
+      background: linear-gradient(135deg, #5c1e1e, #2b1111); color: #d4af37;
+      border: 2px solid #8a6d3b; padding: 15px; font-size: 1rem; font-weight: bold;
+      border-radius: 6px; width: 100%; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      font-family: inherit;
     }
+    .divine-btn:active { transform: scale(0.98); }
+
     .hidden { display: none; }
-    .time-info { margin: 20px 0; font-size: 0.9rem; background: #13152c; padding: 12px; border-radius: 10px; border: 1px solid #334155; }
-    .card { background: #151833; border-radius: 16px; padding: 20px; margin: 15px 0; text-align: left; border-left: 6px solid #6366f1; }
-    .card-shoden { border-left-color: #38bdf8; }
-    .card-chuden { border-left-color: #fb7185; }
-    .card-maiden { border-left-color: #34d399; }
-    .badge { font-size: 0.75rem; background: #24294d; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 8px; color: #a78bfa; font-weight: bold; }
-    .card h2 { margin: 0 0 5px 0; font-size: 1.2rem; color: #fff; }
-    .quote { font-style: italic; color: #a78bfa; font-size: 0.9rem; margin: 8px 0; padding-left: 8px; border-left: 2px solid #a855f7; }
-    .desc { margin: 8px 0 0 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.4; }
+    .info-pane { margin: 15px 0; font-size: 0.85rem; background: #22201c; padding: 10px; border-radius: 6px; border: 1px solid #423d33; color: #cbd5e1; }
+    
+    /* 日本画調カード（墨絵・和紙風） */
+    .washi-card {
+      background: #f7f4eb; color: #1c1a17; border-radius: 8px; padding: 18px; margin: 15px 0;
+      text-align: left; border-left: 6px solid #5c1e1e; position: relative; overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      /* 静かに浮き上がる日本画アニメーション */
+      opacity: 0; transform: translateY(20px);
+    }
+    .washi-card.sumie-fade {
+      animation: sumieAnimate 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+    }
+    @keyframes sumieAnimate {
+      to { opacity: 1; transform: translateY(0); filter: saturate(0.8) contrast(1.1); }
+    }
+    .card-shoden { border-left-color: #4a677d; animation-delay: 0.2s; }
+    .card-chuden { border-left-color: #8c4b4b; animation-delay: 0.7s; }
+    .card-maiden { border-left-color: #41634b; animation-delay: 1.2s; }
+
+    .kanji-badge { font-size: 0.7rem; background: #3a352a; color: #f1ebd9; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+    .chara-title { margin: 0 0 5px 0; font-size: 1.15rem; color: #2b251a; border-bottom: 1px dashed #ad9e82; padding-bottom: 5px; }
+    .gogyo-tag { font-size: 0.7rem; font-weight: bold; display: inline-block; margin-left: 8px; padding: 1px 5px; border-radius: 3px; }
+    
+    /* 五行の色 */
+    .g-mu { background: #41634b; color: #fff; } .g-ka { background: #8c4b4b; color: #fff; }
+    .g-do { background: #b08d49; color: #fff; } .g-gon { background: #717d8c; color: #fff; }
+    .g-sui { background: #2f4858; color: #fff; }
+
+    .sumie-desc { margin: 8px 0 0 0; font-size: 0.85rem; color: #3a352a; line-height: 1.5; }
+    .judgment-box { font-size: 0.75rem; color: #7d2626; font-weight: bold; background: rgba(140,75,75,0.1); padding: 5px; border-radius: 4px; margin-top: 8px; }
   </style>
 </head>
 <body>
 
-<div id="spell-overlay">
-  <div class="spell-text">謹解急急</div>
-  <div class="spell-text" style="color:#a855f7;">如律令</div>
+<!-- 陰陽道 呪文カットイン -->
+<div id="spell-screen">
+  <div style="display: flex;">
+    <div class="spell-word">謹解急急</div>
+    <div class="spell-word" style="color:#d4af37; margin-top: 40px;">如律令</div>
+  </div>
 </div>
 
 <div class="app-container">
-  <h1>🌌 安倍晴明・現代六壬神課EX 🌌</h1>
-  <p class="subtitle">【急急如律令】天命のタイムラインを紡げ</p>
-  <button id="divine-btn">✨ 占事略決・急急如律令！ ✨</button>
+  <h1>🌌 安倍晴明・六壬神課式盤 🌌</h1>
+  <p class="subtitle">― 天人相関・式神天命可視システム ―</p>
+  
+  <!-- 動く式盤グラフィック -->
+  <div class="shikiban-area">
+    <!-- 外側：地盤（固定・十二支） -->
+    <div id="jiban-labels"></div>
+    <!-- 内側：天盤（回転する） -->
+    <div class="tenban" id="main-tenban">
+      <div class="tenban-center">天盤</div>
+      <div id="tenban-labels"></div>
+    </div>
+  </div>
+
+  <button class="divine-btn" id="divine-btn">転天盤・謹解急急如律令！</button>
 
   <div id="result-box" class="hidden">
-    <div class="time-info">占時：<span id="current-time"></span> （<span id="jishi-name"></span>の刻）</div>
+    <div class="info-pane">
+      占時：<span id="txt-time"></span>（<span id="txt-jishi"></span>刻） | 
+      当流空亡：<span id="txt-kubo" style="color:#ef4444; font-weight:bold;"></span>
+    </div>
+    
     <div class="timeline">
-      <div class="card card-shoden">
-        <div class="badge">初伝：因縁の始まり</div>
-        <h2 id="shoden-chara"></h2><div class="quote" id="shoden-quote"></div><p class="desc" id="shoden-text"></p>
+      <div class="washi-card card-shoden" id="c1">
+        <div class="kanji-badge">初伝（事の端緒）</div>
+        <h2 class="chara-title"><span id="t1-name"></span><span id="t1-gogyo"></span></h2>
+        <p class="sumie-desc" id="t1-desc"></p>
+        <div class="judgment-box" id="t1-judge"></div>
       </div>
-      <div class="card card-chuden">
-        <div class="badge">中伝：宿命の道中</div>
-        <h2 id="chuden-chara"></h2><div class="quote" id="chuden-quote"></div><p class="desc" id="chuden-text"></p>
+      <div class="washi-card card-chuden" id="c2">
+        <div class="kanji-badge">中伝（事の経緯）</div>
+        <h2 class="chara-title"><span id="t2-name"></span><span id="t2-gogyo"></span></h2>
+        <p class="sumie-desc" id="t2-desc"></p>
+        <div class="judgment-box" id="t2-judge"></div>
       </div>
-      <div class="card card-maiden">
-        <div class="badge">末伝：必然の結末</div>
-        <h2 id="maiden-chara"></h2><div class="quote" id="maiden-quote"></div><p class="desc" id="maiden-text"></p>
+      <div class="washi-card card-maiden" id="c3">
+        <div class="kanji-badge">末伝（事の帰結）</div>
+        <h2 class="chara-title"><span id="t3-name"></span><span id="t3-gogyo"></span></h2>
+        <p class="sumie-desc" id="t3-desc"></p>
+        <div class="judgment-box" id="t3-judge"></div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const tenshoDeck = [
-  { name: "👑 青龍 (セイリュウ) - イケメンCEO", quote: "「フッ、お前の進む道はすでに億単位の価値を生むと約束されている」", desc: "圧倒的な勝利と富をもたらす最高峰の神。迷いは不要、あなたの決断に大金と成功がブーストされます。今すぐ攻めに転じるべし！" },
-  { name: "🔥 朱雀 (スザク) - 炎上系インフルエンサー", quote: "「アンチも信者も大喝采！世界を味方にバズり散らかそうじゃん！」", desc: "注目度がマックスまで跳ね上がる予兆。ただし、一言の失言が命取りになる諸刃の剣。言葉選びと言動の裏取りは慎重に行うこと。" },
-  { name: "🛡️ 六合 (リクゴウ) - 有能なビジネスパートナー", quote: "「契約成立。あなたとのマイルストーン、全力で並走させていただきます」", desc: "素晴らしい出会いや契約、揺るぎない人脈が結ばれるサイン。独りよがりにならず、周囲との対話と信頼関係を丁寧に紡ぐと大吉です。" },
-  { name: "🧱 勾陳 (コウチン) - ガチガチの頑固警備員", quote: "「ここから先は通行止めだ。足元を固めるまで、一歩も通さん！」", desc: "物事が一時的にストップしたり、横槍が入る予感。無理に強行突破しようとすると大きな摩擦を生みます。今は現状維持と守備に徹せよ。" },
-  { name: "🐍 騰蛇 (トウダ) - ドッキリ仕掛け人", quote: "「キャハハ！まさかそんな展開になるなんて、夢にも思わなかったでしょ？」", desc: "予想不可能なハプニングや、あなたの心を大きく揺さぶる出来事の予兆。何が起きても「想定内だ」と不敵に笑える冷静さを保ちましょう。" },
-  { name: "✨ 貴人 (キジン) - 最上級の総帥守護神", quote: "「恐れるな。私の絶対的な庇護のもと、全ての災厄は塵へと還るだろう」", desc: "安倍晴明が最重用した究極の吉神。目上の有力者からの強力なバックアップが入ります。あらゆるトラブルやアクシデントを無効化する奇跡の刻。" },
-  { name: "👩‍⚕️ 天后 (テンコウ) - 癒やし系メイドナース", quote: "「お疲れ様です、マスター。あなたが傷つく前に、私がすべてを包み込みます」", desc: "陰のサポートやメンタルケアが必要な時期。表舞台に立って目立つよりも、誰かのサポートに回ったり、自分の内面を癒やすことで運気が超安定します。" },
-  { name: "🔮 太陰 (タイイン) - 秘密主義の占い師", quote: "「表の光に騙されてはいけないよ。本当に大切な真実は、常に闇の中に隠されている……」", desc: "隠された真実や、目に見えない裏取引の存在を示唆。あなたにとって都合の良い「秘密の支援」が裏で動いているかも。直感を信じて行動して吉。" },
-  { name: "🐦‍⬛ 玄武 (ゲンブ) - 天才ずる賢ハッカー", quote: "「お前のパスワードも、隠した本音も、全部ハッキング完了済みさ」", desc: "盗難、ウソ、情報漏洩への強い警告。調子の良い甘い言葉や、うますぎるビジネスの誘いには必ず裏があります。セキュリティと警戒レベルを最大に。" },
-  { name: "🦊 太常 (タイジョウ) - お祝い処の若女将", quote: "「美味しいご飯とお酒をご用意しました。今日くらい、皆で笑い合いましょう？」", desc: "会食、パーティー、日常のささやかなご褒美の到来。人を楽しませ、笑顔を共有する場所に極上の幸運が宿ります。お祝い事の計画を立てるのも吉。" },
-  { name: "🐅 白虎 (ビャッコ) - パンクな特攻隊長", quote: "「おいおい、血が滾ってきたぜ！真っ向勝負で全てを叩き潰してやる！」", desc: "突然の衝突や、激しいトラブルの予兆。このカードが出た時期の強引な突破や短気な行動は、致命的な大怪為に繋がります。牙を剥かず、嵐が過ぎるのを待て。" },
-  { name: "☁️ 天空 (テンクウ) - 空っぽのクリエイター", quote: "「あれもこれも全部ただの幻。一度すべてをリセットして、ゼロから創り直そう」", desc: "中身のない計画や、口先だけの約束を意味します。期待していたものが空振りに終わる可能性。一度執着を手放し、ゼロベースで考え直すと新しい光が見えます。" }
+// 十二天将データ（起源、五行属性、日本画調の動物描写、相生相剋ジャッジ）
+const tenshoData = [
+  { name: "貴人 (キジン)", gogyo: "土", color: "g-do", desc: "【天将の総帥・霊獣】気品高き大いなる守護神が静かに降臨する。すべての災禍を墨絵の彼方へ消し去る奇跡の気。周囲からの引き立てを得る必然。" },
+  { name: "螣蛇 (トウダ)", gogyo: "火", color: "g-ka", desc: "【猛火の翼蛇】水墨画の濃淡から怪しく這い出る、炎を纏った大蛇。予期せぬ衝撃や、精神を激しく揺さぶる不可解な変異の前触れ。冷静沈着を要す。" },
+  { name: "朱雀 (スザク)", gogyo: "火", color: "g-ka", desc: "【深紅の霊鳥】極彩色の翼を広げ、天を舞う不死鳥。良くも悪くも隠し事が露見し、光が当たる。公の場での発言や、噂話の取り扱いには細心の注意を。" },
+  { name: "六合 (リクゴウ)", gogyo: "木", color: "g-mu", desc: "【平穏の和獣】古風な和の意匠を纏う穏やかな霊獣。人と人との絆、大吉なる契約、和合が静かに結ばれるタイムライン。調和を重んじることで道が開ける。" },
+  { name: "勾陳 (コウチン)", gogyo: "土", color: "g-do", desc: "【古強者の霊麒麟】鱗を硬く閉ざし、大地を睨む堅牢な獣。物事が膠着し、引き止められる障害の予兆。無理に進もうとせず、足元を固めて時期を待つべし。" },
+  { name: "青竜 (セイリュウ)", gogyo: "木", color: "g-mu", desc: "【蒼天の巨龍】雲海を割り、雷鳴と共に昇る鮮やかな大龍。勢い極まる最高の発展と富をもたらす。これまでの努力が万倍の成果となって現れる必然の兆し。" },
+  { name: "天空 (テンクウ)", gogyo: "土", color: "g-do", desc: "【空無の霧獣】姿を持たず、霧の如く漂う実体のない霧獣。虚偽や中身のない計画の警告。いま抱く期待は幻に終わる恐れあり。一度虚心に立ち返り直す時。" },
+  { name: "白虎 (ビャッコ)", gogyo: "金", color: "g-gon", desc: "【金剛の猛虎】岩をも砕く鋭い爪を持つ、気性の荒い白き虎。突発的なアクシデントや衝突、激しい変化を伴う荒波。刃に立ち向かわず、嵐をやり過ごせ。" },
+  { name: "太常 (タイジョウ)", gogyo: "土", color: "g-do", desc: "【和楽の瑞獣】慶事を呼び込むとされる、おっとりとした霊獣。ささやかなご褒美、会食、日常の和やかな幸福。周囲を喜ばせる行動に極上の吉が宿る。" },
+  { name: "玄武 (ゲンブ)", gogyo: "水", color: "g-sui", desc: "【漆黒の蛇亀】重厚な甲羅に蛇が巻き付く陰湿なる獣。暗がりからの盗難、紛失、ウソや欺瞞への強い警告。甘い誘惑の裏には必ず影がある。警戒を怠るな。" },
+  { name: "太陰 (タイイン)", gogyo: "金", color: "g-gon", desc: "【隠月の密獣】月の光に紛れて姿を隠す、静謐な白狐の如き獣。目に見えぬ裏事情や、隠された真実。水面下であなたを助ける秘密の力が動いている兆し。" },
+  { name: "天后 (テンコウ)", gogyo: "水", color: "g-sui", desc: "【優美なる神女】波間に佇み、静かに祈りを捧げる慈愛の女神。陰ながらのサポートや、深い癒やしの刻。自己主張を抑え、他者を立てることで運気が最大化する。" }
 ];
+
 const jishiList = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
 
-document.getElementById("divine-btn").addEventListener("click", () => {
-  const overlay = document.getElementById("spell-overlay");
-  overlay.classList.add("show");
+// 五行の相生相剋相性マッピング
+function judgeGogyo(g1, g2) {
+  if (g1 === g2) return "【比和】二つのエネルギーが同調し、現在の状況がそのまま強まります。";
+  const relations = {
+    "木火": "生", "火土": "生", "土金": "生", "金水": "生", "水木": "生",
+    "木土": "剋", "土水": "剋", "水火": "剋", "火金": "剋", "金木": "剋"
+  };
+  if (relations[g1 + g2] === "生") return `【相生】${g1}が${g2}を生み出す好循環。事態は自然とスムーズに流れます。`;
+  if (relations[g2 + g1] === "生") return `【相生】${g2}が${g1}を支える構図。思わぬバックアップが期待できます。`;
+  if (relations[g1 + g2] === "剋") return `【相剋】${g1}が${g2}を打ち消す不調和。無理なコントロールは摩擦を生みます。`;
+  if (relations[g2 + g1] === "剋") return `【相剋】${g2}から${g1}が強く制限される逆風。慎重な立ち回りが必要です。`;
+  return "【混在】複雑な因果が絡み合っています。一筋縄ではいかぬ展開。";
+}
+
+// 式盤の文字を配置する関数
+function setupShikiban() {
+  const jiban = document.getElementById("jiban-labels");
+  const tenban = document.getElementById("tenban-labels");
   
-  setTimeout(() => {
-    overlay.classList.remove("show");
-    document.body.classList.add("flash-active");
+  for(let i=0; i<12; i++) {
+    let angle = (i * 30 - 90) * (Math.PI / 180);
+    // 地盤の配置（半径115pxの位置）
+    let x1 = 130 + 112 * Math.cos(angle) - 10;
+    let y1 = 130 + 112 * Math.sin(angle) - 10;
+    jiban.innerHTML += `<div class="jishi-label" style="left:${x1}px; top:${y1}px; color:#8a6d3b;">${jishiList[i]}</div>`;
     
-    const now = new Date();
-    const hours = now.getHours();
-    let jishiIndex = Math.floor(((hours + 1) % 24) / 2);
-    if (jishiIndex < 0) jishiIndex = 11;
-    
-    let seed = now.getMinutes() + now.getSeconds() + jishiIndex;
-    let selected = [];
-    let tempDeck = [...tenshoDeck];
-    
-    for (let i = 0; i < 3; i++) {
-      let index = (seed + i * 7) % tempDeck.length;
-      selected.push(tempDeck.splice(index, 1)[0]);
-    }
-    
-    document.getElementById("current-time").innerText = now.toLocaleTimeString();
-    document.getElementById("jishi-name").innerText = jishiList[jishiIndex];
-    
-    const ids = ["shoden", "chuden", "maiden"];
-    for(let i=0; i<3; i++) {
-      document.getElementById(ids[i]+"-chara").innerText = selected[i].name;
-      document.getElementById(ids[i]+"-quote").innerText = selected[i].quote;
-      document.getElementById(ids[i]+"-text").innerText = selected[i].desc;
-    }
-    
-    document.getElementById("result-box").classList.remove("hidden");
-    setTimeout(() => { document.body.classList.remove("flash-active"); }, 1200);
-  }, 1200);
-});
-</script>
-</body>
-</html>
+    // 天盤の配置（半径80pxの位置）
+    let x2 = 100 + 78 * Math.cos(angle) - 10;
+    let y2 = 100 + 78 * Math.sin(angle) - 10;
+    tenban.innerHTML += `<div class="jishi-label" style="left:${x2}px; top:${y2}px;">${jishiList[i]}</div>`;
+  }
+}
+setupShikiban();
+
+let currentRotation = 0;
+
+document.getElementById("divine-btn").addEventListener("click", () => {
+  const spell = document.getElementById("spell-screen");
