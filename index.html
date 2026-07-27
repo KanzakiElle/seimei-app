@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- スマホでアプリ風に表示するための設定 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>安倍晴明・現代六壬神課</title>
+  <style>
+    body {
+      background: #0f1123;
+      color: #e2e8f0;
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
+      margin: 0;
+    }
+    .app-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding-top: 20px;
+    }
+    h1 { font-size: 1.5rem; color: #a78bfa; margin-bottom: 5px; }
+    .subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 25px; }
+    button {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      color: white; border: none; padding: 18px 30px;
+      font-size: 1.1rem; border-radius: 30px; font-weight: bold;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4); width: 100%;
+      cursor: pointer;
+    }
+    .hidden { display: none; }
+    .time-info { margin: 20px 0; font-size: 0.9rem; color: #cbd5e1; background: #1e1b4b; padding: 10px; border-radius: 10px; }
+    .card {
+      background: #1e293b; border-radius: 15px; padding: 20px; margin: 15px 0;
+      text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      border-left: 5px solid #6366f1;
+    }
+    .badge { font-size: 0.75rem; background: #334155; padding: 3px 8px; border-radius: 5px; display: inline-block; margin-bottom: 8px; color: #94a3b8; }
+    .card h2 { margin: 0 0 10px 0; font-size: 1.3rem; }
+    .card p { margin: 0; font-size: 0.9rem; line-height: 1.4; color: #cbd5e1; }
+    .card-shoden { border-left-color: #38bdf8; }
+    .card-chuden { border-left-color: #fb7185; }
+    .card-maiden { border-left-color: #34d399; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <h1>🌌 安倍晴明・現代六壬神課 🌌</h1>
+  <p class="subtitle">「今、この瞬間」の必然を可視化する</p>
+  
+  <button id="divine-btn">✨ 式盤を回して占う ✨</button>
+
+  <div id="result-box" class="hidden">
+    <div class="time-info">
+      占時: <span id="current-time"></span> (<span id="jishi-name"></span>の刻)
+    </div>
+    
+    <div class="timeline">
+      <div class="card card-shoden">
+        <div class="badge">初伝：物事の始まり</div>
+        <h2 id="shoden-chara"></h2>
+        <p id="shoden-text"></p>
+      </div>
+      <div class="card card-chuden">
+        <div class="badge">中伝：プロセスの途中</div>
+        <h2 id="chuden-chara"></h2>
+        <p id="chuden-text"></p>
+      </div>
+      <div class="card card-maiden">
+        <div class="badge">末伝：必然の結末</div>
+        <h2 id="maiden-chara"></h2>
+        <p id="maiden-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const tenshoDeck = [
+  { name: "👑 青龍 (セイリュウ) - イケメンCEO", desc: "圧倒的な成功とブーストをもたらす最強の味方。今すぐ動くのが大吉！" },
+  { name: "🔥 朱雀 (スザク) - 炎上系インフルエンサー", desc: "注目度バツグンだが口論や噂話に注意。言葉選びは慎重に。" },
+  { name: "🛡️ 六合 (リクゴウ) - 有能なビジネスパートナー", desc: "協力者や素晴らしい契約、人脈との出会い。対話を大切にすると吉。" },
+  { name: "🧱 勾陳 (コウチン) - ガチガチの頑固警備員", desc: "物事が停滞したり、引き止められたりする予兆。無理に進まず現状維持を。" },
+  { name: "🐍 騰蛇 (トウダ) - ドッキリ仕掛け人", desc: "予想外のハプニングや、心の動揺が起きる予感。焦らず冷静に対応せよ。" },
+  { name: "✨ 貴人 (キジン) - 最上級の守護神", desc: "目上の人からの強力なバックアップや、全てのトラブルを消し去る奇跡のエネルギー。" },
+  { name: "👩‍⚕️ 天后 (テンコウ) - 癒やし系メイドナース", desc: "裏回しやメンタルケア。一歩引いて、他人のサポートに回ると運気が安定します Rhodes。" },
+  { name: "🔮 太陰 (タイイン) - 秘密主義の占い師", desc: "隠された真実、裏事情。目に見えないところで物事が有利に動いています。" },
+  { name: "🐦‍⬛ 玄武 (ゲンブ) - 天才ずる賢ハッカー", desc: "盗難、ウソ、情報漏洩に注意。甘い言葉には必ず裏があるので警戒してください。" },
+  { name: "🦊 太常 (タイジョウ) - お祝い処の女将", desc: "会食、パーティー、日常の小さな幸せ。人を楽しませる行動に幸運あり。" },
+  { name: "🐅 白虎 (ビャッコ) - パンクな特攻隊長", desc: "突然のトラブルや激しい衝突の予兆。この時期の強引な突破は怪我をします。" },
+  { name: "☁️ 天空 (テンクウ) - 空っぽのクリエイター", desc: "実体のない計画、口先だけ。一度思考をリセットし、ゼロから作り直す時。" }
+];
+
+const jishiList = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+
+document.getElementById("divine-btn").addEventListener("click", () => {
+  const now = new Date();
+  const hours = now.getHours();
+  
+  let jishiIndex = Math.floor(((hours + 1) % 24) / 2);
+  if (jishiIndex < 0) jishiIndex = 11;
+  const jishi = jishiList[jishiIndex];
+  
+  let seed = now.getMinutes() + now.getSeconds() + jishiIndex;
+  let selected = [];
+  let tempDeck = [...tenshoDeck];
+  
+  for (let i = 0; i < 3; i++) {
+    let index = (seed + i * 7) % tempDeck.length;
+    selected.push(tempDeck.splice(index, 1)[0]);
+  }
+  
+  document.getElementById("current-time").innerText = now.toLocaleTimeString();
+  document.getElementById("jishi-name").innerText = jishi;
+  
+  document.getElementById("shoden-chara").innerText = selected[0].name;
+  document.getElementById("shoden-text").innerText = selected[0].desc;
+  
+  document.getElementById("chuden-chara").innerText = selected[1].name;
+  document.getElementById("chuden-text").innerText = selected[1].desc;
+  
+  document.getElementById("maiden-chara").innerText = selected[2].name;
+  document.getElementById("maiden-text").innerText = selected[2].desc;
+  
+  document.getElementById("result-box").classList.remove("hidden");
+});
+</script>
+</body>
+</html>
