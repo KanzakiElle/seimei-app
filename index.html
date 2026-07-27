@@ -30,7 +30,7 @@
   <p class="subtitle">悩みに合わせて12の式神が未来の必然を翻訳する</p>
   
   <!-- みんなが自由に使える空欄の入力欄に修正 -->
-  <input type="text" id="user-query" class="input-box" placeholder="占いたい悩みをここに入力（例：恋愛、仕事、金運、無くし物など）">
+  <input type="text" id="user-query" class="input-box" placeholder="占いたい悩みをここに入力（例：恋愛、仕事など）">
   <button id="divine-btn">✨ 占事略決・AI自動解読！ ✨</button>
 
   <div id="result-box" class="hidden">
@@ -78,11 +78,8 @@ const jishiList = ["子","丑","寅","卯","辰","巳","午","未","申","酉","
 document.getElementById("divine-btn").addEventListener("click", () => {
   const query = document.getElementById("user-query").value;
   let type = "general";
-  if (query.match(/(痛|病|治|体|健康|風邪|頭|熱|医|ケガ)/)) type = "health";
-  else if (query.match(/(恋|愛|好き|彼|彼女|結婚|復縁|付|出会)/)) type = "love";
-  else if (query.match(/(金|金運|金儲|金もち|給料|買|投資|財布|損|得)/)) type = "money";
-  else if (query.match(/(友|達|人間関係|上司|部下|嫌|喧嘩|けんか|同僚|仲間)/)) type = "relation";
-  else if (query.match(/(なく|無|探|どこ|落と|紛失|物|鍵|財布)/)) type = "lost"; 
+  if (query.match(/(痛|病|治|体|健康|風邪|頭|熱|医)/)) type = "health";
+  else if (query.match(/(恋|愛|好き|彼|彼女|結婚|復縁|付)/)) type = "love";
 
   const now = new Date();
   
