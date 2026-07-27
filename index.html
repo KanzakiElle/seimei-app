@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>安倍晴明・AI六壬神課</title>
+  <style>
+    body { background: #0c0d1a; color: #e2e8f0; font-family: sans-serif; padding: 15px; text-align: center; margin: 0; }
+    .app-container { max-width: 500px; margin: 0 auto; }
+    h1 { font-size: 1.4rem; color: #c084fc; text-shadow: 0 0 10px rgba(192,132,252,0.4); margin-bottom: 5px; }
+    .subtitle { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; }
+    .input-box { width: 100%; padding: 15px; font-size: 1rem; border-radius: 10px; border: 2px solid #4c1d95; background: #1e1b4b; color: #fff; box-sizing: border-box; margin-bottom: 15px; text-align: center; }
+    button { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: 1px solid #c084fc; padding: 15px; font-size: 1.1rem; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer; }
+    .hidden { display: none; }
+    .info-pane { margin: 15px 0; font-size: 0.85rem; background: #13152c; padding: 10px; border-radius: 10px; border: 1px solid #334155; }
+    .ai-bubble { background: #2e1065; border: 1px dashed #a855f7; padding: 15px; border-radius: 12px; text-align: left; margin: 15px 0; font-size: 0.9rem; line-height: 1.5; color: #e9d5ff; }
+    .card { background: #151833; border-radius: 16px; padding: 15px; margin: 15px 0; text-align: left; border-left: 6px solid #6366f1; }
+    .card-shoden { border-left-color: #38bdf8; } .card-chuden { border-left-color: #fb7185; } .card-maiden { border-left-color: #34d399; }
+    .badge { font-size: 0.75rem; background: #24294d; padding: 3px 8px; border-radius: 6px; display: inline-block; margin-bottom: 5px; color: #a78bfa; font-weight: bold; }
+    .card h3 { margin: 0 0 5px 0; font-size: 1.1rem; color: #fff; }
+    .desc { margin: 5px 0 0 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <h1>🌌 安倍晴明・AI六壬解読課 🌌</h1>
+  <p class="subtitle">悩みに合わせて12の式神が未来の必然を翻訳する</p>
+  
+  <!-- みんなが自由に使える空欄の入力欄に修正 -->
+  <input type="text" id="user-query" class="input-box" placeholder="占いたい悩みをここに入力（例：恋愛、仕事など）">
+  <button id="divine-btn">✨ 占事略決・AI自動解読！ ✨</button>
+
+  <div id="result-box" class="hidden">
+    <div class="info-pane">占時：<span id="txt-time"></span>（<span id="txt-jishi"></span>刻）</div>
+    
+    <div class="ai-bubble">
+      <strong>🔮 安倍晴明によるAI総合解読リポート：</strong><br>
+      <span id="ai-report"></span>
+    </div>
+
+    <div class="card card-shoden">
+      <div class="badge">初伝：問題の原因（事の始まり）</div>
+      <h3 id="t1-name"></h3><p class="desc" id="t1-desc"></p>
+    </div>
+    <div class="card card-chuden">
+      <div class="badge">中伝：宿命の経過（道中の出来事）</div>
+      <h3 id="t2-name"></h3><p class="desc" id="t2-desc"></p>
+    </div>
+    <div class="card card-maiden">
+      <div class="badge">末伝：必然の結末（最終結果）</div>
+      <h3 id="t3-name"></h3><p class="desc" id="t3-desc"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+// 復活した12天将（動物・神々）の完全データベース
+const tenshoData = [
+  { name: "👑 貴人 (キジン)", gogyo: "土", health: "【総帥の加護】全ての災厄を消し去る最上の神。医療の力を借りることで劇的に回復へと向かいます。", love: "【祝福される恋】目上の人や周囲から応援してもらえる関係。堂々と愛を育むべし。", general: "【最強の守護】目上の有力者から強力なバックアップを得て、あらゆる問題が消滅する大吉の兆し。" },
+  { name: "🐍 螣蛇 (トウダ)", gogyo: "火", health: "【精神の動揺】ハプニングや自律神経の乱れによる不調。焦らず暗い部屋で心を落ち着けるのが先決。", love: "【不意のハプニング】予期せぬ出来事に心が揺さぶられる予兆。感情的にならず冷静に対処せよ。", general: "【怪奇なる変異】水墨画の闇から大蛇が這い出る如き驚き。予想外の事態にも「想定内」と笑う余裕を。" },
+  { name: "🔥 朱雀 (スザク)", gogyo: "火", health: "【表面化する症状】隠れていた不摂生が熱や痛みとなって外に出る時。出し切ってしまえば後は楽になります。", love: "【恋の噂・注目】良くも悪くも二人の関係に光が当たる時。隠し事は露見するので誠実な対話を。", general: "【鳳凰の露見】公の場での発言や文書、噂話に注意。あなたの言葉が大きく注目を集める諸刃の剣。" },
+  { name: "🛡️ 六合 (リクゴウ)", gogyo: "木", health: "【医薬との和合】あなたにぴったりの良医や薬（パートナー）と巡り合い、全力で並走されて完治へ。", love: "【素晴らしい契約】絆が公式に結ばれる大吉のサイン。お互いの信頼を丁寧に紡ぐと最高の結末に。", general: "【和合の絆】素晴らしいビジネスパートナーとの出会いや契約が結ばれる。対話を重んじよ。" },
+  { name: "🧱 勾陳 (コウチン)", gogyo: "土", health: "【一時的な膠着】病状が長引いたり引き止められる感覚。無理に動かず足元を固めてじっくり養生を。", love: "【進展の停滞】頑固さや横槍によって関係が膠着する予感。焦って距離を詰めようとせず時期を待て。", general: "【堅牢なる停滞】物事が一時的に通行止めになる障害の予兆。無理に進まず現状維持と守備に徹せよ。" },
+  { name: "🐉 青龍 (セイリュウ)", gogyo: "木", health: "【生命のブースト】みなぎる木気のエネルギーで急速に回復する兆し。少し散歩をして日光を浴びると大吉。", love: "【最高潮の進展】あなたの魅力が限界突破する時。自信を持ってあなたからアプローチすれば成功確実。", general: "【蒼天の巨龍】富と大勝利をもたらす最高の発展。これまでの努力が万倍の成果となる必然の兆し。" },
+  { name: "☁️ 天空 (テンクウ)", gogyo: "土", health: "【気の緩み・幻】病は気から。実体のない不安に心が負けている状態。一度思考をリセットして深呼吸を。", love: "【実体のない約束】相手の口先だけの言葉に振り回される恐れ。一度執着を手放しゼロから見直す時。", general: "【空無の霧】中身のない計画やウソの警告。いま抱く期待は幻に終わる恐れあり。ゼロベースで考え直せ。" },
+  { name: "🐅 白虎 (ビャッコ)", gogyo: "金", health: "【猛烈な炎症・嵐】今まさに激しい痛みのピークを迎えている象徴。強引に動かず、嵐が過ぎるのをじっと待て。", love: "【感情の爆発】突発的な喧嘩や衝突の予兆。今は牙を剥き合わず、相手の怒りが落ち着くのを待つのが正解。", general: "【金剛の猛虎】アクシデントや荒波の襲来。真っ向から刃に立ち向かわず、賢くやり過ごすべし。" },
+  { name: "🦊 太常 (タイジョウ)", gogyo: "土", health: "【日常の和楽】美味しい食事と適度な睡眠で元気が戻るお告げ。日々の小さな幸福に感謝すると吉。", love: "【楽しい会食】デートやパーティーなど、笑顔を共有する場所に極上の幸運が宿ります。計画を立てよ。", general: "【慶事の到来】ささやかなご褒美、お祝い事の到来。人を楽しませる行動をすると運気が安定します。" },
+  { name: "🐦‍⬛ 玄武 (ゲンブ)", gogyo: "水", health: "【隠れたダメージ】見えない疲れやストレスを隠していたのが原因。自分に嘘をつかず休めという警告。", love: "【秘密の紛れ込み】相手に言えない本音や嘘の暗示。甘い言葉の裏にある影を警戒してください。", general: "【欺瞞への警戒】盗難、紛失、ウソへの強い警告。調子の良いビジネスや誘いには必ず裏があります。" },
+  { name: "🌙 太陰 (タイイン)", gogyo: "金", health: "【静謐なる回復】静かな暗い部屋で眠ることで真価を発揮する癒やしの気。誰にも邪魔されず休むべし。", love: "【水面下の進展】まだ表には見えないが、二人の裏事情や本音のところで秘密の恋が有利に動く兆し。", general: "【隠月の密獣】隠された真実。目に見えないところで、あなたを助ける秘密の支援が動いているサイン。" },
+  { name: "👩‍⚕️ 天后 (テンコウ)", gogyo: "水", health: "【深いメンタルケア】陰ながらの優しいサポートやケアが必要な刻。他人に甘えることで運気が安定します。", love: "【慈愛のサポート】一歩引いて相手を立てたり、支える側に回ることで二人の絆が最も深まるタイムライン。", general: "【神女の祈り】自己主張を抑え、他人のサポートに回ることで自分の運気が最大化する不思議な刻。" }
+];
+
+const jishiList = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+
+document.getElementById("divine-btn").addEventListener("click", () => {
+  const query = document.getElementById("user-query").value;
+  let type = "general";
+  if (query.match(/(痛|病|治|体|健康|風邪|頭|熱|医)/)) type = "health";
+  else if (query.match(/(恋|愛|好き|彼|彼女|結婚|復縁|付)/)) type = "love";
+
+  const now = new Date();
+  
+  // 12種類の式神を完全に毎回ランダムシャッフルして3枚選ぶ（復活）
+  let deck = [...tenshoData];
+  let selected = [];
+  // 秒数と分数を使って毎回違うランダムな種を作る
+  let seed = now.getMinutes() + now.getSeconds() + now.getMilliseconds();
+  
+  for (let i = 0; i < 3; i++) {
+    let idx = (seed + i * 13) % deck.length;
+    selected.push(deck.splice(idx, 1)[0]);
+  }
+
+  // 安倍晴明風の自動解読テキストを組み立てる
+  let report = `「この悩み、事の始まりは【${selected[0].name}】が司り、${selected[0][type]}という因縁を孕む。道中、状況は【${selected[1].name}】へと変転し、${selected[1][type]}という宿命のプロセスを経るであろう。しかし恐れることなかれ、最終結末には【${selected[2].name}】が降臨し、${selected[2][type]}という必然の結末へとあなたを導くタイムラインなり。急急如律令！」`;
+
+  // 画面へ反映
+  document.getElementById("txt-time").innerText = now.toLocaleTimeString();
+  document.getElementById("txt-jishi").innerText = jishiList[Math.floor(((now.getHours()+1)%24)/2)];
+  document.getElementById("ai-report").innerText = report;
+
+  const ids = ["t1", "t2", "t3"];
+  for(let i=0; i<3; i++) {
+    document.getElementById(`${ids[i]}-name`).innerText = `${selected[i].name} [五行: ${selected[i].gogyo}]`;
+    document.getElementById(`${ids[i]}-desc`).innerText = selected[i][type];
+  }
+  
+  document.getElementById("result-box").classList.remove("hidden");
+  // ページの上部へ自動スクロールして結果を見やすくする
+  window.scrollTo({ top: 300, behavior: 'smooth' });
+});
+</script>
+</body>
+</html>
