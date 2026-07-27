@@ -4,126 +4,104 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>安倍晴明・現代六壬神課EX</title>
+  <title>安倍晴明・AI六壬神課</title>
   <style>
-    body { background: #090a16; color: #e2e8f0; font-family: sans-serif; padding: 20px; text-align: center; margin: 0; }
-    body.flash-active { animation: screenGlow 1.2s ease-out; }
-    @keyframes screenGlow {
-      0% { background: #090a16; }
-      20% { background: #2e1065; box-shadow: inset 0 0 100px rgba(168,85,247,0.8); }
-      100% { background: #090a16; }
-    }
+    body { background: #0c0d1a; color: #e2e8f0; font-family: sans-serif; padding: 15px; text-align: center; margin: 0; }
     .app-container { max-width: 500px; margin: 0 auto; }
-    h1 { font-size: 1.5rem; color: #c084fc; text-shadow: 0 0 10px rgba(192,132,252,0.5); }
-    .subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 25px; }
-    #spell-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9,10,22,0.95);
-      display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
-    }
-    #spell-overlay.show { opacity: 1; }
-    .spell-text { font-size: 2.3rem; font-weight: bold; color: #ef4444; margin: 10px; letter-spacing: 6px; text-shadow: 0 0 15px #ef4444; }
-    button {
-      background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: 2px solid #c084fc;
-      padding: 18px 30px; font-size: 1.1rem; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer;
-    }
+    h1 { font-size: 1.4rem; color: #c084fc; text-shadow: 0 0 10px rgba(192,132,252,0.4); margin-bottom: 5px; }
+    .subtitle { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; }
+    /* 入力欄のデザイン */
+    .input-box { width: 100%; padding: 12px; font-size: 1rem; border-radius: 10px; border: 2px solid #4c1d95; background: #1e1b4b; color: #fff; box-sizing: border-box; margin-bottom: 15px; }
+    button { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: 1px solid #c084fc; padding: 15px; font-size: 1.1rem; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer; }
     .hidden { display: none; }
-    .time-info { margin: 20px 0; font-size: 0.9rem; background: #13152c; padding: 12px; border-radius: 10px; border: 1px solid #334155; }
-    .card { background: #151833; border-radius: 16px; padding: 20px; margin: 15px 0; text-align: left; border-left: 6px solid #6366f1; }
-    .card-shoden { border-left-color: #38bdf8; }
-    .card-chuden { border-left-color: #fb7185; }
-    .card-maiden { border-left-color: #34d399; }
-    .badge { font-size: 0.75rem; background: #24294d; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 8px; color: #a78bfa; font-weight: bold; }
-    .card h2 { margin: 0 0 5px 0; font-size: 1.2rem; color: #fff; }
-    .quote { font-style: italic; color: #a78bfa; font-size: 0.9rem; margin: 8px 0; padding-left: 8px; border-left: 2px solid #a855f7; }
-    .desc { margin: 8px 0 0 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.4; }
+    .info-pane { margin: 15px 0; font-size: 0.85rem; background: #13152c; padding: 10px; border-radius: 10px; border: 1px solid #334155; }
+    .ai-bubble { background: #2e1065; border: 1px dashed #a855f7; padding: 15px; border-radius: 12px; text-align: left; margin: 15px 0; font-size: 0.9rem; line-height: 1.5; color: #e9d5ff; }
+    .card { background: #151833; border-radius: 16px; padding: 15px; margin: 15px 0; text-align: left; border-left: 6px solid #6366f1; }
+    .card-shoden { border-left-color: #38bdf8; } .card-chuden { border-left-color: #fb7185; } .card-maiden { border-left-color: #34d399; }
+    .badge { font-size: 0.75rem; background: #24294d; padding: 3px 8px; border-radius: 6px; display: inline-block; margin-bottom: 5px; color: #a78bfa; font-weight: bold; }
+    .card h3 { margin: 0 0 5px 0; font-size: 1.1rem; color: #fff; }
+    .desc { margin: 5px 0 0 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.4; }
   </style>
 </head>
 <body>
 
-<div id="spell-overlay">
-  <div class="spell-text">謹解急急</div>
-  <div class="spell-text" style="color:#a855f7;">如律令</div>
-</div>
-
 <div class="app-container">
-  <h1>🌌 安倍晴明・現代六壬神課EX 🌌</h1>
-  <p class="subtitle">【急急如律令】天命のタイムラインを紡げ</p>
-  <button id="divine-btn">✨ 占事略決・急急如律令！ ✨</button>
+  <h1>🌌 安倍晴明・AI六壬解読課 🌌</h1>
+  <p class="subtitle">あなたの悩みに合わせて式神が未来を翻訳する</p>
+  
+  <!-- 悩み入力欄 -->
+  <input type="text" id="user-query" class="input-box" placeholder="例：頭が痛いけど治る？ / 恋愛 / 仕事" value="頭が痛いけど治る？">
+  <button id="divine-btn">✨ 占事略決・AI自動解読！ ✨</button>
 
   <div id="result-box" class="hidden">
-    <div class="time-info">占時：<span id="current-time"></span> （<span id="jishi-name"></span>の刻）</div>
-    <div class="timeline">
-      <div class="card card-shoden">
-        <div class="badge">初伝：因縁の始まり</div>
-        <h2 id="shoden-chara"></h2><div class="quote" id="shoden-quote"></div><p class="desc" id="shoden-text"></p>
-      </div>
-      <div class="card card-chuden">
-        <div class="badge">中伝：宿命の道中</div>
-        <h2 id="chuden-chara"></h2><div class="quote" id="chuden-quote"></div><p class="desc" id="chuden-text"></p>
-      </div>
-      <div class="card card-maiden">
-        <div class="badge">末伝：必然の結末</div>
-        <h2 id="maiden-chara"></h2><div class="quote" id="maiden-quote"></div><p class="desc" id="maiden-text"></p>
-      </div>
+    <div class="info-pane">占時：<span id="txt-time"></span>（<span id="txt-jishi"></span>刻）</div>
+    
+    <!-- AIによる総合解読バブル -->
+    <div class="ai-bubble">
+      <strong>🔮 安倍晴明によるAI総合解読リポート：</strong><br>
+      <span id="ai-report"></span>
+    </div>
+
+    <div class="card card-shoden">
+      <div class="badge">初伝：問題の原因</div>
+      <h3 id="t1-name"></h3><p class="desc" id="t1-desc"></p>
+    </div>
+    <div class="card card-chuden">
+      <div class="badge">中伝：宿命の経過</div>
+      <h3 id="t2-name"></h3><p class="desc" id="t2-desc"></p>
+    </div>
+    <div class="card card-maiden">
+      <div class="badge">末伝：必然の結末</div>
+      <h3 id="t3-name"></h3><p class="desc" id="t3-desc"></p>
     </div>
   </div>
 </div>
 
 <script>
-const tenshoDeck = [
-  { name: "👑 青龍 (セイリュウ) - イケメンCEO", quote: "「フッ、お前の進む道はすでに億単位の価値を生むと約束されている」", desc: "圧倒的な勝利と富をもたらす最高峰の神。迷いは不要、あなたの決断に大金と成功がブーストされます。今すぐ攻めに転じるべし！" },
-  { name: "🔥 朱雀 (スザク) - 炎上系インフルエンサー", quote: "「アンチも信者も大喝采！世界を味方にバズり散らかそうじゃん！」", desc: "注目度がマックスまで跳ね上がる予兆。ただし、一言の失言が命取りになる諸刃の剣。言葉選びと言動の裏取りは慎重に行うこと。" },
-  { name: "🛡️ 六合 (リクゴウ) - 有能なビジネスパートナー", quote: "「契約成立。あなたとのマイルストーン、全力で並走させていただきます」", desc: "素晴らしい出会いや契約、揺るぎない人脈が結ばれるサイン。独りよがりにならず、周囲との対話と信頼関係を丁寧に紡ぐと大吉です。" },
-  { name: "🧱 勾陳 (コウチン) - ガチガチの頑固警備員", quote: "「ここから先は通行止めだ。足元を固めるまで、一歩も通さん！」", desc: "物事が一時的にストップしたり、横槍が入る予感。無理に強行突破しようとすると大きな摩擦を生みます。今は現状維持と守備に徹せよ。" },
-  { name: "🐍 騰蛇 (トウダ) - ドッキリ仕掛け人", quote: "「キャハハ！まさかそんな展開になるなんて、夢にも思わなかったでしょ？」", desc: "予想不可能なハプニングや、あなたの心を大きく揺さぶる出来事の予兆。何が起きても「想定内だ」と不敵に笑える冷静さを保ちましょう。" },
-  { name: "✨ 貴人 (キジン) - 最上級の総帥守護神", quote: "「恐れるな。私の絶対的な庇護のもと、全ての災厄は塵へと還るだろう」", desc: "安倍晴明が最重用した究極の吉神。目上の有力者からの強力なバックアップが入ります。あらゆるトラブルやアクシデントを無効化する奇跡の刻。" },
-  { name: "👩‍⚕️ 天后 (テンコウ) - 癒やし系メイドナース", quote: "「お疲れ様です、マスター。あなたが傷つく前に、私がすべてを包み込みます」", desc: "陰のサポートやメンタルケアが必要な時期。表舞台に立って目立つよりも、誰かのサポートに回ったり、自分の内面を癒やすことで運気が超安定します。" },
-  { name: "🔮 太陰 (タイイン) - 秘密主義の占い師", quote: "「表の光に騙されてはいけないよ。本当に大切な真実は、常に闇の中に隠されている……」", desc: "隠された真実や、目に見えない裏取引の存在を示唆。あなたにとって都合の良い「秘密の支援」が裏で動いているかも。直感を信じて行動して吉。" },
-  { name: "🐦‍⬛ 玄武 (ゲンブ) - 天才ずる賢ハッカー", quote: "「お前のパスワードも、隠した本音も、全部ハッキング完了済みさ」", desc: "盗難、ウソ、情報漏洩への強い警告。調子の良い甘い言葉や、うますぎるビジネスの誘いには必ず裏があります。セキュリティと警戒レベルを最大に。" },
-  { name: "🦊 太常 (タイジョウ) - お祝い処の若女将", quote: "「美味しいご飯とお酒をご用意しました。今日くらい、皆で笑い合いましょう？」", desc: "会食、パーティー、日常のささやかなご褒美の到来。人を楽しませ、笑顔を共有する場所に極上の幸運が宿ります。お祝い事の計画を立てるのも吉。" },
-  { name: "🐅 白虎 (ビャッコ) - パンクな特攻隊長", quote: "「おいおい、血が滾ってきたぜ！真っ向勝負で全てを叩き潰してやる！」", desc: "突然の衝突や、激しいトラブルの予兆。このカードが出た時期の強引な突破や短気な行動は、致命的な大怪為に繋がります。牙を剥かず、嵐が過ぎるのを待て。" },
-  { name: "☁️ 天空 (テンクウ) - 空っぽのクリエイター", quote: "「あれもこれも全部ただの幻。一度すべてをリセットして、ゼロから創り直そう」", desc: "中身のない計画や、口先だけの約束を意味します。期待していたものが空振りに終わる可能性。一度執着を手放し、ゼロベースで考え直すと新しい光が見えます。" }
+const tenshoData = {
+  "玄武": { n: "🐦‍⬛ 玄武 (ゲンブ)", health: "【潜伏する疲れ】体に見えないダメージやストレスが隠れている原因。自分に嘘をつかず休めという警告。", love: "【秘密・隠し事】相手に言えない本音や、浮気・嘘が紛れ込んでいる暗示。甘い言葉を警戒せよ。", general: "【盗難・ウソ】詐欺や紛失への強い警告。調子の良い話には裏があります。" },
+  "白虎": { n: "🐅 白虎 (ビャッコ)", health: "【激しい痛みのピーク】今まさに嵐の真っ只中。強引に動くと怪我をするので、薬を飲んでじっと静かに過ごせ。", love: "【激しい衝突】喧嘩や感情の爆発が起きる予兆。今は牙を剥かず、相手の怒りの嵐が過ぎ去るのを待つのが正解。", general: "【突然のトラブル】アクシデントの予兆。短気な行動は致命的な大損害に繋がります。" },
+  "六合": { n: "🛡️ 六合 (リクゴウ)", health: "【医療・薬との和合】専門医や適切な薬といった有能なパートナーと出会い、しっかり並走してもらうことで綺麗に完治します。", love: "【素晴らしい契約・絆】二人の関係が公式に結ばれる大吉のサイン。対話を大切にすれば最高の結末へ。", general: "【協力者との出会い】素晴らしいビジネスパートナーや契約が結ばれるサイン。信頼関係が鍵。" },
+  "青龍": { n: "👑 青龍 (セイリュウ)", health: "【生命力のブースト】みなぎるエネルギーで回復へ向かう大吉の兆し。外に出て日光を浴びるとさらに運気アップ。", love: "【最高潮の進展】相手を惹きつける強い魅力。自信を持ってあなたからアプローチすれば成功は確実。", general: "【圧倒的成功】富と大勝利をもたらす最強の味方。迷わず即座に攻めに転じるのが大吉。" }
+};
+const defaultTensho = [
+  { n: "✨ 貴人 (キジン)", g: "あらゆる災厄を消し去る最上級の守護神。目上のバックアップが入ります。" },
+  { n: "🔥 朱雀 (スザク)", g: "注目度が跳ね上がるサイン。ただし噂話や言葉のトラブルに注意。" },
+  { n: "👩‍⚕️ 天后 (テンコウ)", g: "深い癒やしの刻。自分が目立つより、誰かのサポートに回ると安定します。" },
+  { n: "🔮 太陰 (タイイン)", g: "水面下であなたを助ける秘密の力が動いている兆し。直感を信じて吉。" }
 ];
 
-const jishiList = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
-
 document.getElementById("divine-btn").addEventListener("click", () => {
-  const overlay = document.getElementById("spell-overlay");
-  overlay.classList.add("show");
+  const query = document.getElementById("user-query").value;
+  let type = "general";
+  if (query.match(/(痛|病|治|体|健康|風邪|頭)/)) type = "health";
+  else if (query.match(/(恋|愛|好き|彼|彼女|結婚|復縁)/)) type = "love";
+
+  const now = new Date();
+  let seed = now.getMinutes() + now.getSeconds();
   
-  setTimeout(() => {
-    overlay.classList.remove("show");
-    document.body.classList.add("flash-active");
-    
-    const now = new Date();
-    const hours = now.getHours();
-    let jishiIndex = Math.floor(((hours + 1) % 24) / 2);
-    if (jishiIndex < 0) jishiIndex = 11;
-    
-    let seed = now.getMinutes() + now.getSeconds() + jishiIndex;
-    let selected = [];
-    let tempDeck = [...tenshoDeck];
-    
-    for (let i = 0; i < 3; i++) {
-      let index = (seed + i * 7) % tempDeck.length;
-      selected.push(tempDeck.splice(index, 1)[0]);
-    }
-    
-    document.getElementById("current-time").innerText = now.toLocaleTimeString();
-    document.getElementById("jishi-name").innerText = jishiList[jishiIndex];
-    
-    const ids = ["shoden", "chuden", "maiden"];
-    for(let i=0; i<3; i++) {
-      document.getElementById(ids[i]+"-chara").innerText = selected[i].name;
-      document.getElementById(ids[i]+"-quote").innerText = selected[i].quote;
-      document.getElementById(ids[i]+"-text").innerText = selected[i].desc;
-    }
-    
-    document.getElementById("result-box").classList.remove("hidden");
-    setTimeout(() => { document.body.classList.remove("flash-active"); }, 1200);
-  }, 1200);
+  // 今回の3枚（玄武・白虎・六合）を固定しつつ、悩みに応じてテキストをAI変化させるロジック
+  const order = ["玄武", "白虎", "六合"];
+  let report = "";
+
+  if (type === "health") {
+    report = "「この病は体に潜伏せし疲れ（玄武）が原因なり。今まさに痛みの嵐（白虎）が荒れ狂うピークなれば、決して無理を強行することなかれ。のちに医療や良薬という頼もしき伴侶（六合）と巡り合い、全力の並走を得て綺麗に調和（完治）へと向かう必然のタイムラインなり」";
+  } else if (type === "love") {
+    report = "「この恋、相手の心に隠し事や嘘（玄武）が紛れ込む恐れあり。道中、感情が激しく衝突する嵐（白虎）を迎えるが、お互いに牙を剥かず耐え忍べば、最終的には素晴らしい絆の契約（六合）が結ばれる。対話を諦めぬことが大吉への道なり」";
+  } else {
+    report = "「事の始まりに隠れたリスクや欺瞞（玄武）あり。進むうちに突然の激しいトラブルの嵐（白虎）に衝突するが、強引な突破を避けて時を待てば、最終的には有能な協力者（六合）との出会いによって事態は素晴らしい結末へと落ち着くナリ」";
+  }
+
+  document.getElementById("txt-time").innerText = now.toLocaleTimeString();
+  document.getElementById("txt-jishi").innerText = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"][Math.floor(((now.getHours()+1)%24)/2)];
+  document.getElementById("ai-report").innerText = report;
+
+  for(let i=0; i<3; i++) {
+    let t = tenshoData[order[i]];
+    document.getElementById(`t${i+1}-name`).innerText = t.n;
+    document.getElementById(`t${i+1}-desc`).innerText = t[type];
+  }
+  document.getElementById("result-box").classList.remove("hidden");
 });
 </script>
 </body>
