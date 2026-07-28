@@ -6,12 +6,51 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>安倍晴明・AI六壬神課</title>
-    <style>
-    body { background: #0c0d1a; color: #e2e8f0; font-family: sans-serif; padding: 15px; text-align: center; margin: 0; }
-    .app-container { max-width: 500px; margin: 0 auto; }
-    h1 { font-size: 1.4rem; color: #c084fc; text-shadow: 0 0 10px rgba(192,132,252,0.4); margin-bottom: 5px; }
-    .subtitle { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; }
-    .input-box { width: 100%; padding: 15px; font-size: 1rem; border-radius: 10px; border: 2px solid #4c1d95; background: #1e1b4b; color: #fff; box-sizing: border-box; margin-bottom: 15px; text-align: center; }
+      <style>
+    body {
+      background: #090a16;
+      color: #e2e8f0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+      margin: 0;
+      overflow-x: hidden;
+      transition: background 0.5s ease;
+    }
+    /* 画面全体が光るエフェクトのベース */
+    body.flash-active {
+      animation: screenGlow 1.2s ease-out;
+    }
+    @keyframes screenGlow {
+      0% { background: #090a16; box-shadow: inset 0 0 100px rgba(168, 85, 247, 0); }
+      20% { background: #2e1065; box-shadow: inset 0 0 100px rgba(168, 85, 247, 0.8); }
+      100% { background: #090a16; box-shadow: inset 0 0 100px rgba(168, 85, 247, 0); }
+    }
+
+    .app-container { max-width: 500px; margin: 0 auto; padding-top: 10px; }
+    h1 { font-size: 1.6rem; color: #c084fc; margin-bottom: 5px; text-shadow: 0 0 10px rgba(192, 132, 252, 0.5); }
+    .subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 25px; letter-spacing: 1px; }
+    
+    /* 呪文カットインの演出 */
+    #spell-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(9, 10, 22, 0.9); display: flex; flex-direction: column;
+      justify-content: center; align-items: center; z-index: 100;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    #spell-overlay.show { opacity: 1; }
+    .spell-text {
+      font-size: 2.5rem; font-weight: bold; color: #ef4444; margin: 10px 0;
+      letter-spacing: 8px; text-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
+      transform: scale(0.5); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #spell-overlay.show .spell-text { transform: scale(1); }
+    .spell-circle {
+      width: 150px; height: 150px; border: 2px dashed #a855f7; border-radius: 50%;
+      animation: rotateCircle 3s linear infinite; margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    }
+    @keyframes rotateCircle { 100% { transform: rotate(360deg); } }
     button { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: 1px solid #c084fc; padding: 15px; font-size: 1.1rem; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer; }
     .hidden { display: none; }
     .info-pane { margin: 15px 0; font-size: 0.85rem; background: #13152c; padding: 10px; border-radius: 10px; border: 1px solid #334155; }
