@@ -22,11 +22,9 @@
     opacity:0;
     pointer-events:none;
     transition:.3s;
-    z-index:9999;
-}
+    z-index:9999;}
 #spell-overlay.show{
-    opacity:1;
-}
+    opacity:1;}
 .spell-circle{
     width:180px;
     height:180px;
@@ -36,8 +34,7 @@
     box-shadow:
       0 0 20px #9333ea,
       inset 0 0 20px #9333ea;
-    animation:rotateCircle 1.2s linear infinite;
-}
+    animation:rotateCircle 1.2s linear infinite;}
 .spell-circle::before{
     content:"✦";
     position:absolute;
@@ -45,15 +42,12 @@
     top:-15px;
     transform:translateX(-50%);
     font-size:28px;
-    color:#facc15;
-}
+    color:#facc15;}
 @keyframes rotateCircle{
     from{
-        transform:rotate(0deg);
-    }
+        transform:rotate(0deg);}
     to{
-        transform:rotate(360deg);
-    }
+        transform:rotate(360deg);}
 }
 .spell-text{
     margin-top:30px;
@@ -67,32 +61,25 @@
       0 0 10px #ff0000,
       0 0 20px #ff4444,
       0 0 40px #ff6666;
-    transition:.35s;
-}
+    transition:.35s;}
 #spell-overlay.show .spell-text{
     opacity:1;
-    transform:scale(1);
-}
+    transform:scale(1);}
 body.flash-active{
-    animation:screenGlow 1.2s ease-out;
-}
+    animation:screenGlow 1.2s ease-out;}
 @keyframes screenGlow{
 0%{
 background:#0c0d1a;
-box-shadow:inset 0 0 0 rgba(168,85,247,0);
-}
+box-shadow:inset 0 0 0 rgba(168,85,247,0);}
 25%{
 background:#2e1065;
-box-shadow:inset 0 0 220px rgba(168,85,247,.9);
-}
+box-shadow:inset 0 0 220px rgba(168,85,247,.9);}
 60%{
 background:#4c1d95;
-box-shadow:inset 0 0 320px rgba(255,255,255,.45);
-}
+box-shadow:inset 0 0 320px rgba(255,255,255,.45);}
 100%{
 background:#0c0d1a;
-box-shadow:inset 0 0 0 rgba(168,85,247,0);
-}
+box-shadow:inset 0 0 0 rgba(168,85,247,0);}
 }
     <style>
     body { background: #0c0d1a; color: #e2e8f0; font-family: sans-serif; padding: 15px; text-align: center; margin: 0; }
