@@ -69,7 +69,6 @@
   </div>
 </div>
 
-<!-- ⚙️ 2. 演出と占いを同期させる制御プログラム（JavaScript） -->
 <script>
 const tenshoData = [
   { name: "👑 貴人 (キジン)", gogyo: "土", health: "【総帥の加護】全ての災厄を消し去る最上の神。医療の力を借りることで劇的に回復へと向かいます。", love: "【祝福される恋】目上の人や周囲から応援してもらえる関係。堂々と愛を育むべし。", money: "【格式高き富】目上の有力者からの引き立てにより、大きな報酬や昇給を得る兆し。", relation: "【最高の信頼】周囲からの尊敬を集める時。目上の人からの強力なバックアップが得られます。", lost: "【北東・大吉】貴人の光が照らす方角にあり。目上の人や家族が知らぬ間に移動させた可能性高し。尋ねてみよ。", general: "【最強の守護】あらゆる問題が自然と消滅する大吉の兆し。堂々と進むのが正解。" },
@@ -89,14 +88,12 @@ const tenshoData = [
 const jishiList = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
 document.getElementById("divine-btn").addEventListener("click", () => {
-  // 1. ボタンを押した瞬間に「急急如律令」の黒い画面を出す
   const overlay = document.getElementById("spell-overlay");
   overlay.classList.add("show");
   
-  // 2. 1.2秒（1200ミリ秒）後に占いを実行し、画面を光らせる
   setTimeout(() => {
-    overlay.classList.remove("show"); // 呪文を消す
-    document.body.classList.add("flash-active"); // 紫色の発光エフェクト発動
+    overlay.classList.remove("show"); 
+    document.body.classList.add("flash-active"); 
     
     const query = document.getElementById("user-query").value;
     
@@ -129,10 +126,8 @@ document.getElementById("divine-btn").addEventListener("click", () => {
       document.getElementById(`${ids[i]}-desc`).innerText = selected[i][type];
     }
     
-    // 占い結果のカードを表示
     document.getElementById("result-box").classList.remove("hidden");
     
-    // 3. 発光演出を終了させる
     setTimeout(() => { document.body.classList.remove("flash-active"); }, 1200);
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }, 1200);
