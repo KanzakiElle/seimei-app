@@ -1,16 +1,37 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 📱 ホーム画面のアイコン画像（魔法陣風の画像） -->
+  <link rel="apple-touch-icon" href="https://unsplash.com">
+  <link rel="icon" href="https://unsplash.com">
+  
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>安倍晴明・AI六壬神課</title>
+  <title>安倍晴明・真伝AI六壬神課</title>
   <style>
-    body { background: #0c0d1a; color: #e2e8f0; font-family: sans-serif; padding: 15px; text-align: center; margin: 0; }
+    body { background: #090a16; color: #e2e8f0; font-family: sans-serif; padding: 15px; text-align: center; margin: 0; }
+    
+    /* 🌌 復活：画面全体が妖しく光るエフェクト */
+    body.flash-active { animation: screenGlow 1.2s ease-out; }
+    @keyframes screenGlow {
+      0% { background: #090a16; }
+      20% { background: #2e1065; box-shadow: inset 0 0 100px rgba(168,85,247,0.8); }
+      100% { background: #090a16; }
+    }
+    
     .app-container { max-width: 500px; margin: 0 auto; }
     h1 { font-size: 1.4rem; color: #c084fc; text-shadow: 0 0 10px rgba(192,132,252,0.4); margin-bottom: 5px; }
     .subtitle { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; }
+    
+    /* 🌌 復活：呪文カットイン画面 */
+    #spell-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9,10,22,0.95);
+      display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    }
+    #spell-overlay.show { opacity: 1; }
+    .spell-text { font-size: 2.3rem; font-weight: bold; color: #ef4444; margin: 10px; letter-spacing: 6px; text-shadow: 0 0 15px #ef4444; }
+    
     .input-box { width: 100%; padding: 15px; font-size: 1rem; border-radius: 10px; border: 2px solid #4c1d95; background: #1e1b4b; color: #fff; box-sizing: border-box; margin-bottom: 15px; text-align: center; }
     button { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: 1px solid #c084fc; padding: 15px; font-size: 1.1rem; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer; }
     .hidden { display: none; }
@@ -21,6 +42,12 @@
     .badge { font-size: 0.75rem; background: #24294d; padding: 3px 8px; border-radius: 6px; display: inline-block; margin-bottom: 5px; color: #a78bfa; font-weight: bold; }
     .card h3 { margin: 0 0 5px 0; font-size: 1.1rem; color: #fff; }
     .desc { margin: 5px 0 0 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.4; }
+    
+    .guide-box { background: #111322; border: 1px solid #232742; border-radius: 12px; padding: 20px; text-align: left; margin-top: 30px; font-size: 0.85rem; line-height: 1.5; color: #cbd5e1; }
+    .guide-box h2 { font-size: 1rem; color: #c084fc; margin-top: 15px; border-bottom: 1px solid #312e81; padding-bottom: 5px; }
+    .guide-box h2:first-child { margin-top: 0; }
+    .guide-box ul { margin: 5px 0 15px 0; padding-left: 20px; }
+    .guide-box li { margin-bottom: 5px; }
   </style>
 </head>
 <body>
