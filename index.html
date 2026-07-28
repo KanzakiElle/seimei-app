@@ -105,8 +105,7 @@ document.getElementById("divine-btn").addEventListener("click", () => {
   overlay.classList.add("show");
   
   // 2. 1.2秒（1200ミリ秒）の間、呪文を見せる
-  setTimeout(() => {
-    overlay.classList.remove("show"); // 呪文画面を消す
+  setTimeout(() => {overlay.classList.remove("show"); // 呪文画面を消す
     document.body.classList.add("flash-active"); // 画面をフワッと発光させる
     
     // 3. 占いの計算処理をスタート
@@ -124,10 +123,8 @@ document.getElementById("divine-btn").addEventListener("click", () => {
     let selected = [];
     let seed = now.getMinutes() + now.getSeconds() + now.getMilliseconds();
     
-    for (let i = 0; i < 3; i++) {
-      let idx = (seed + i * 17) % deck.length;
-      selected.push(deck.splice(idx, 1)[0]);
-    }
+    for (let i = 0; i < 3; i++) {let idx = (seed + i * 17) % deck.length;
+      selected.push(deck.splice(idx, 1)[0]);}
 
     // 4. 安倍晴明風のリポート文章を作成
     let report = `「この悩み、事の始まりは【${selected[0].name}】が司り、${selected[0][type]}という因縁を孕む。道中、状況は【${selected[1].name}】へと変転し、${selected[1][type]}という宿命のプロセスを経るであろう。しかし恐れることなかれ、最終結末には【${selected[2].name}】が降臨し、${selected[2][type]}という必然の結末へとあなたを導くタイムラインなり。急急如律令！」`;
@@ -138,10 +135,8 @@ document.getElementById("divine-btn").addEventListener("click", () => {
     document.getElementById("ai-report").innerText = report;
 
     const ids = ["t1", "t2", "t3"];
-    for(let i=0; i<3; i++) {
-      document.getElementById(`${ids[i]}-name`).innerText = `${selected[i].name} [五行: ${selected[i].gogyo}]`;
-      document.getElementById(`${ids[i]}-desc`).innerText = selected[i][type];
-    }
+    for(let i=0; i<3; i++) {document.getElementById(`${ids[i]}-name`).innerText = `${selected[i].name} [五行: ${selected[i].gogyo}]`;
+      document.getElementById(`${ids[i]}-desc`).innerText = selected[i][type];}
     
     // 結果ボックスを表示
     document.getElementById("result-box").classList.remove("hidden");
@@ -149,7 +144,7 @@ document.getElementById("divine-btn").addEventListener("click", () => {
     // 6. 発光エフェクトが終了したらクラスを外す（次回のため）
     setTimeout(() => { document.body.classList.remove("flash-active"); }, 1200);
     window.scrollTo({ top: 300, behavior: 'smooth' });
-  }, 1200);
+     }, 1200);
 });
 </script>
 </body>
