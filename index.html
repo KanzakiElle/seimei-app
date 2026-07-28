@@ -96,19 +96,6 @@ const tenshoData = [
   { name: "👩‍⚕️ 天后 (テンコウ)", gogyo: "水", health: "【深いメンタルケア】陰ながらの優しいサポートやケアが必要な刻。他人に甘えることで運気が安定します。", love: "【慈愛のサポート】一歩引いて相手を立てたり、支える側に回ることで二人の絆が最も深まるタイムライン。", general: "【神女の祈り】自己主張を抑え、他人のサポートに回ることで自分の運気が最大化する不思議な刻。",lost: "【北・吉】水に関係する場所（洗面所、浴室、キッチンの水回り）の近く。または女性が触れた場所に優しく保管されています。",money: "【陰の引き立て】表立って儲けるより、誰かのサポートや裏方に回ることで、結果的に安定した利益を得る時。", relation: "【慈愛の刻】自己主張を抑え、他人の相談に乗ったり優しくサポートすることであなたの信頼が最大化します。" }
 ];
 
-const jishiList = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
-
-document.getElementById("divine-btn").addEventListener("click", () => {
-  const query = document.getElementById("user-query").value;
-  let type = "general";
-  if (query.match(/(痛|病|治|体|健康|風邪|頭|熱|医|ケガ)/)) type = "health";
-  else if (query.match(/(恋|愛|好き|彼|彼女|結婚|復縁|付|出会)/)) type = "love";
-  else if (query.match(/(金|金運|金儲|金もち|給料|買|投資|財布|損|得)/)) type = "money";
-  else if (query.match(/(友|達|人間関係|上司|部下|嫌|喧嘩|けんか|同僚|仲間)/)) type = "relation";
-  else if (query.match(/(なく|無|探|どこ|落と|紛失|物|鍵|財布)/)) type = "lost";
-
-  const jishiList = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
-
 // 🔮 ボタンが押されたときの演出と占いの連動ロジック
 document.getElementById("divine-btn").addEventListener("click", () => {
   // 1. 呪文画面を出現させる
