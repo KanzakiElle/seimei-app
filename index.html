@@ -134,6 +134,10 @@ const tenshoData = [
 const jishiList = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
 document.getElementById("divine-btn").addEventListener("click", () => {
+ document.body.classList.add("flash-active");
+setTimeout(() => {
+  document.body.classList.remove("flash-active");
+}, 1200);
   const query = document.getElementById("user-query").value;
   let type = "general";
   if (query.match(/(痛|病|治|体|健康|風邪|頭|熱|医|ケガ)/)) type = "health";
