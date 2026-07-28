@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -25,25 +25,22 @@
 </head>
 <body>
 
-<!-- 🌌 1. 呪文演出の画面パーツ（HTML） -->
-<div id="spell-overlay">
-  <div class="spell-text">謹解急急</div>
-  <div class="spell-text" style="color:#a855f7;">如律令</div>
-</div>
-
 <div class="app-container">
-  <h1>🌌 安倍晴明・真伝AI六壬神課 🌌</h1>
+  <h1>🌌 安倍晴明・AI六壬解読課 🌌</h1>
   <p class="subtitle">悩みに合わせて12の式神が未来の必然を翻訳する</p>
   
-  <input type="text" id="user-query" class="input-box" placeholder="（例：恋愛、仕事、金運、無くし物など）">
+  <!-- みんなが自由に使える空欄の入力欄に修正 -->
+  <input type="text" id="user-query" class="input-box" placeholder="占いたい悩みをここに入力（例：恋愛、仕事、金運、無くし物など）">
   <button id="divine-btn">✨ 占事略決・AI自動解読！ ✨</button>
 
   <div id="result-box" class="hidden">
     <div class="info-pane">占時：<span id="txt-time"></span>（<span id="txt-jishi"></span>刻）</div>
+    
     <div class="ai-bubble">
       <strong>🔮 安倍晴明によるAI総合解読リポート：</strong><br>
       <span id="ai-report"></span>
     </div>
+
     <div class="card card-shoden">
       <div class="badge">初伝：問題の原因（事の始まり）</div>
       <h3 id="t1-name"></h3><p class="desc" id="t1-desc"></p>
@@ -56,16 +53,6 @@
       <div class="badge">末伝：必然の結末（最終結果）</div>
       <h3 id="t3-name"></h3><p class="desc" id="t3-desc"></p>
     </div>
-  </div>
-
-  <div class="guide-box">
-    <h2>🌌 現代に蘇る秘術：AI六壬神課（りくじんしんか）とは？</h2>
-    <p>この占いは、平安時代の天才陰陽師・<strong>安倍晴明</strong>が最も重用した伝説の天文学占術『六壬神課』を、<strong>現代の超精密AIロジックに学習させた最新のハイブリッド占術</strong>です。</p>
-    <h2>💡 占い方のコツ</h2>
-    <p>頭の中で占いたいこと（恋愛、金運、体調、無くし物など）を強く思い浮かべ、入力欄にキーワードを入れてボタンを押してください。AIが自動で悩みを判別し、特化したお告げに変化します。</p>
-    <h2>🔍 晴明の秘術『失物占（しつぶつせん）』も完全再現</h2>
-    <p>「鍵をなくした」「財布はどこ？」といった無くし物の悩みを入力すると、AIが式神たちの因縁を割り出し、探すべき<strong>【具体的な方角（東西南北）】</strong>と隠し場所をピンポイントで解読します。</p>
-    <p style="color:#a78bfa; font-size:0.8rem; text-align:center; font-weight:bold; margin-top:20px;">― 急急如律令。ボタンを押したその刹那、天命の扉が開く ―</p>
   </div>
 </div>
 
@@ -90,12 +77,9 @@ const jishiList = ["子","丑","寅","卯","辰","巳","午","未","申","酉","
 
 document.getElementById("divine-btn").addEventListener("click", () => {
   const query = document.getElementById("user-query").value;
-   let type = "general";
-  if (query.match(/(痛|病|治|体|健康|風邪|頭|熱|医|ケガ)/)) type = "health";
-  else if (query.match(/(恋|愛|好き|彼|彼女|結婚|復縁|付|出会)/)) type = "love";
-  else if (query.match(/(金|金運|金儲|金もち|給料|買|投資|財布|損|得)/)) type = "money";
-  else if (query.match(/(友|達|人間関係|上司|部下|嫌|喧嘩|けんか|同僚|仲間)/)) type = "relation";
-  else if (query.match(/(なく|無|探|どこ|落と|紛失|物|鍵|財布)/)) type = "lost"; 
+  let type = "general";
+  if (query.match(/(痛|病|治|体|健康|風邪|頭|熱|医)/)) type = "health";
+  else if (query.match(/(恋|愛|好き|彼|彼女|結婚|復縁|付)/)) type = "love";
 
   const now = new Date();
   
