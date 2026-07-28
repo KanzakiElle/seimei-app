@@ -7,129 +7,71 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>安倍晴明・現代六壬神課EX</title>
   <style>
-    body {
-      background: #090a16;
-      color: #e2e8f0;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      padding: 20px;
-      text-align: center;
-      margin: 0;
-      overflow-x: hidden;
-      transition: background 0.5s ease;
-    }
-    /* 画面全体が光るエフェクトのベース */
-    body.flash-active {
-      animation: screenGlow 1.2s ease-out;
-    }
+    body { background: #090a16; color: #e2e8f0; font-family: sans-serif; padding: 20px; text-align: center; margin: 0; }
+    body.flash-active { animation: screenGlow 1.2s ease-out; }
     @keyframes screenGlow {
-      0% { background: #090a16; box-shadow: inset 0 0 100px rgba(168, 85, 247, 0); }
-      20% { background: #2e1065; box-shadow: inset 0 0 100px rgba(168, 85, 247, 0.8); }
-      100% { background: #090a16; box-shadow: inset 0 0 100px rgba(168, 85, 247, 0); }
+      0% { background: #090a16; }
+      20% { background: #2e1065; box-shadow: inset 0 0 100px rgba(168,85,247,0.8); }
+      100% { background: #090a16; }
     }
-
-    .app-container { max-width: 500px; margin: 0 auto; padding-top: 10px; }
-    h1 { font-size: 1.6rem; color: #c084fc; margin-bottom: 5px; text-shadow: 0 0 10px rgba(192, 132, 252, 0.5); }
-    .subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 25px; letter-spacing: 1px; }
-    
-    /* 呪文カットインの演出 */
+    .app-container { max-width: 500px; margin: 0 auto; }
+    h1 { font-size: 1.5rem; color: #c084fc; text-shadow: 0 0 10px rgba(192,132,252,0.5); }
+    .subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 25px; }
     #spell-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(9, 10, 22, 0.9); display: flex; flex-direction: column;
-      justify-content: center; align-items: center; z-index: 100;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9,10,22,0.95);
+      display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
     }
     #spell-overlay.show { opacity: 1; }
-    .spell-text {
-      font-size: 2.5rem; font-weight: bold; color: #ef4444; margin: 10px 0;
-      letter-spacing: 8px; text-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
-      transform: scale(0.5); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    #spell-overlay.show .spell-text { transform: scale(1); }
-    .spell-circle {
-      width: 150px; height: 150px; border: 2px dashed #a855f7; border-radius: 50%;
-      animation: rotateCircle 3s linear infinite; margin-bottom: 20px;
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-    }
-    @keyframes rotateCircle { 100% { transform: rotate(360deg); } }
-
-    /* 召喚ボタン */
+    .spell-text { font-size: 2.3rem; font-weight: bold; color: #ef4444; margin: 10px; letter-spacing: 6px; text-shadow: 0 0 15px #ef4444; }
     button {
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      color: white; border: 2px solid #c084fc; padding: 18px 30px;
-      font-size: 1.1rem; border-radius: 30px; font-weight: bold;
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); width: 100%;
-      cursor: pointer; transition: all 0.2s ease;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: 2px solid #c084fc;
+      padding: 18px 30px; font-size: 1.1rem; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer;
     }
-    button:active { transform: scale(0.96); box-shadow: 0 0 5px rgba(168, 85, 247, 0.2); }
-    
     .hidden { display: none; }
-    .time-info { margin: 20px 0; font-size: 0.9rem; color: #cbd5e1; background: #13152c; border: 1px solid #334155; padding: 12px; border-radius: 10px; }
-    
-    /* カードのデザイン強化 */
-    .card {
-      background: #151833; border-radius: 16px; padding: 22px; margin: 20px 0;
-      text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      border-left: 6px solid #6366f1; transform: translateY(50px); opacity: 0;
-    }
-    .card.reveal {
-      animation: cardIn 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-    }
-    @keyframes cardIn { to { transform: translateY(0); opacity: 1; } }
-    .card-shoden { border-left-color: #38bdf8; animation-delay: 0.1s !important; }
-    .card-chuden { border-left-color: #fb7185; animation-delay: 0.3s !important; }
-    .card-maiden { border-left-color: #34d399; animation-delay: 0.5s !important; }
-
-    .badge { font-size: 0.75rem; background: #24294d; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 12px; color: #a78bfa; font-weight: bold; border: 1px solid #4338ca; }
-    .card h2 { margin: 0 0 5px 0; font-size: 1.3rem; color: #ffffff; }
-    .quote { font-style: italic; color: #a78bfa; font-size: 0.95rem; margin: 10px 0; padding-left: 10px; border-left: 2px solid #a855f7; line-height: 1.4; }
-    .card p.desc { margin: 10px 0 0 0; font-size: 0.85rem; line-height: 1.5; color: #94a3b8; }
+    .time-info { margin: 20px 0; font-size: 0.9rem; background: #13152c; padding: 12px; border-radius: 10px; border: 1px solid #334155; }
+    .card { background: #151833; border-radius: 16px; padding: 20px; margin: 15px 0; text-align: left; border-left: 6px solid #6366f1; }
+    .card-shoden { border-left-color: #38bdf8; }
+    .card-chuden { border-left-color: #fb7185; }
+    .card-maiden { border-left-color: #34d399; }
+    .badge { font-size: 0.75rem; background: #24294d; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 8px; color: #a78bfa; font-weight: bold; }
+    .card h2 { margin: 0 0 5px 0; font-size: 1.2rem; color: #fff; }
+    .quote { font-style: italic; color: #a78bfa; font-size: 0.9rem; margin: 8px 0; padding-left: 8px; border-left: 2px solid #a855f7; }
+    .desc { margin: 8px 0 0 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.4; }
   </style>
 </head>
 <body>
 
-<!-- 呪文カットイン演出用の画面 -->
 <div id="spell-overlay">
-  <div class="spell-circle"></div>
   <div class="spell-text">謹解急急</div>
-  <div class="spell-text" style="color:#a855f7; font-size:3rem;">如律令</div>
+  <div class="spell-text" style="color:#a855f7;">如律令</div>
 </div>
 
 <div class="app-container">
   <h1>🌌 安倍晴明・現代六壬神課EX 🌌</h1>
   <p class="subtitle">【急急如律令】天命のタイムラインを紡げ</p>
-  
   <button id="divine-btn">✨ 占事略決・急急如律令！ ✨</button>
 
   <div id="result-box" class="hidden">
-    <div class="time-info">
-      占時：<span id="current-time"></span> （<span id="jishi-name"></span>の刻）
-    </div>
-    
+    <div class="time-info">占時：<span id="current-time"></span> （<span id="jishi-name"></span>の刻）</div>
     <div class="timeline">
-      <div class="card card-shoden" id="card1">
+      <div class="card card-shoden">
         <div class="badge">初伝：因縁の始まり</div>
-        <h2 id="shoden-chara"></h2>
-        <div class="quote" id="shoden-quote"></div>
-        <p class="desc" id="shoden-text"></p>
+        <h2 id="shoden-chara"></h2><div class="quote" id="shoden-quote"></div><p class="desc" id="shoden-text"></p>
       </div>
-      <div class="card card-chuden" id="card2">
+      <div class="card card-chuden">
         <div class="badge">中伝：宿命の道中</div>
-        <h2 id="chuden-chara"></h2>
-        <div class="quote" id="chuden-quote"></div>
-        <p class="desc" id="chuden-text"></p>
+        <h2 id="chuden-chara"></h2><div class="quote" id="chuden-quote"></div><p class="desc" id="chuden-text"></p>
       </div>
-      <div class="card card-maiden" id="card3">
+      <div class="card card-maiden">
         <div class="badge">末伝：必然の結末</div>
-        <h2 id="maiden-chara"></h2>
-        <div class="quote" id="maiden-quote"></div>
-        <p class="desc" id="maiden-text"></p>
+        <h2 id="maiden-chara"></h2><div class="quote" id="maiden-quote"></div><p class="desc" id="maiden-text"></p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// 12天将のキャラクターデータ（セリフと解説を大幅強化）
 const tenshoDeck = [
   { name: "👑 青龍 (セイリュウ) - イケメンCEO", quote: "「フッ、お前の進む道はすでに億単位の価値を生むと約束されている」", desc: "圧倒的な勝利と富をもたらす最高峰の神。迷いは不要、あなたの決断に大金と成功がブーストされます。今すぐ攻めに転じるべし！" },
   { name: "🔥 朱雀 (スザク) - 炎上系インフルエンサー", quote: "「アンチも信者も大喝采！世界を味方にバズり散らかそうじゃん！」", desc: "注目度がマックスまで跳ね上がる予兆。ただし、一言の失言が命取りになる諸刃の剣。言葉選びと言動の裏取りは慎重に行うこと。" },
@@ -138,10 +80,10 @@ const tenshoDeck = [
   { name: "🐍 騰蛇 (トウダ) - ドッキリ仕掛け人", quote: "「キャハハ！まさかそんな展開になるなんて、夢にも思わなかったでしょ？」", desc: "予想不可能なハプニングや、あなたの心を大きく揺さぶる出来事の予兆。何が起きても「想定内だ」と不敵に笑える冷静さを保ちましょう。" },
   { name: "✨ 貴人 (キジン) - 最上級の総帥守護神", quote: "「恐れるな。私の絶対的な庇護のもと、全ての災厄は塵へと還るだろう」", desc: "安倍晴明が最重用した究極の吉神。目上の有力者からの強力なバックアップが入ります。あらゆるトラブルやアクシデントを無効化する奇跡の刻。" },
   { name: "👩‍⚕️ 天后 (テンコウ) - 癒やし系メイドナース", quote: "「お疲れ様です、マスター。あなたが傷つく前に、私がすべてを包み込みます」", desc: "陰のサポートやメンタルケアが必要な時期。表舞台に立って目立つよりも、誰かのサポートに回ったり、自分の内面を癒やすことで運気が超安定します。" },
-  { name: "🔮 太陰 (タイイン) - 秘密主義の占い師", desc: "隠された真実、裏事情。目に見えないところで物事が有利に動いています。", quote: "「表の光に騙されてはいけないよ。本当に大切な真実は、常に闇の中に隠されている……」", desc: "隠された真実や、目に見えない裏取引の存在を示唆。あなたにとって都合の良い「秘密の支援」が裏で動いているかも。直感を信じて行動して吉。" },
+  { name: "🔮 太陰 (タイイン) - 秘密主義の占い師", quote: "「表の光に騙されてはいけないよ。本当に大切な真実は、常に闇の中に隠されている……」", desc: "隠された真実や、目に見えない裏取引の存在を示唆。あなたにとって都合の良い「秘密の支援」が裏で動いているかも。直感を信じて行動して吉。" },
   { name: "🐦‍⬛ 玄武 (ゲンブ) - 天才ずる賢ハッカー", quote: "「お前のパスワードも、隠した本音も、全部ハッキング完了済みさ」", desc: "盗難、ウソ、情報漏洩への強い警告。調子の良い甘い言葉や、うますぎるビジネスの誘いには必ず裏があります。セキュリティと警戒レベルを最大に。" },
   { name: "🦊 太常 (タイジョウ) - お祝い処の若女将", quote: "「美味しいご飯とお酒をご用意しました。今日くらい、皆で笑い合いましょう？」", desc: "会食、パーティー、日常のささやかなご褒美の到来。人を楽しませ、笑顔を共有する場所に極上の幸運が宿ります。お祝い事の計画を立てるのも吉。" },
-  { name: "🐅 白虎 (ビャッコ) - パンクな特攻隊長", quote: "「おいおい、血が滾ってきたぜ！真っ向勝負で全てを叩き潰してやる！」", desc: "突然の衝突や、激しいトラブルの予兆。このカードが出た時期の強引な突破や短気な行動は、致命的な大怪我に繋がります。牙を剥かず、嵐が過ぎるのを待て。" },
+  { name: "🐅 白虎 (ビャッコ) - パンクな特攻隊長", quote: "「おいおい、血が滾ってきたぜ！真っ向勝負で全てを叩き潰してやる！」", desc: "突然の衝突や、激しいトラブルの予兆。このカードが出た時期の強引な突破や短気な行動は、致命的な大怪為に繋がります。牙を剥かず、嵐が過ぎるのを待て。" },
   { name: "☁️ 天空 (テンクウ) - 空っぽのクリエイター", quote: "「あれもこれも全部ただの幻。一度すべてをリセットして、ゼロから創り直そう」", desc: "中身のない計画や、口先だけの約束を意味します。期待していたものが空振りに終わる可能性。一度執着を手放し、ゼロベースで考え直すと新しい光が見えます。" }
 ];
 
@@ -149,28 +91,16 @@ const jishiList = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申"
 
 document.getElementById("divine-btn").addEventListener("click", () => {
   const overlay = document.getElementById("spell-overlay");
-  const resultBox = document.getElementById("result-box");
-  
-  // 1. 呪文カットイン演出スタート
   overlay.classList.add("show");
   
-  // カードを一旦非表示にする
-  document.getElementById("card1").classList.remove("reveal");
-  document.getElementById("card2").classList.remove("reveal");
-  document.getElementById("card3").classList.remove("reveal");
-
   setTimeout(() => {
-    // 2. 1秒後に呪文画面を消し、画面全体をフラッシュさせる
     overlay.classList.remove("show");
     document.body.classList.add("flash-active");
     
-    // 3. ロジック計算の実行
     const now = new Date();
     const hours = now.getHours();
-    
     let jishiIndex = Math.floor(((hours + 1) % 24) / 2);
     if (jishiIndex < 0) jishiIndex = 11;
-    const jishi = jishiList[jishiIndex];
     
     let seed = now.getMinutes() + now.getSeconds() + jishiIndex;
     let selected = [];
@@ -178,39 +108,23 @@ document.getElementById("divine-btn").addEventListener("click", () => {
     
     for (let i = 0; i < 3; i++) {
       let index = (seed + i * 7) % tempDeck.length;
-      selected.push(tempDeck.splice(index, 1)[0]); // ここを修正して確実にオブジェクトを取得
+      selected.push(tempDeck.splice(index, 1)[0]);
     }
     
-    // 4. 画面へのデータ書き込み
     document.getElementById("current-time").innerText = now.toLocaleTimeString();
-    document.getElementById("jishi-name").innerText = jishi;
+    document.getElementById("jishi-name").innerText = jishiList[jishiIndex];
     
-    // 初伝
-    document.getElementById("shoden-chara").innerText = selected[0].name;
-    document.getElementById("shoden-quote").innerText = selected[0].quote;
-    document.getElementById("shoden-text").innerText = selected[0].desc;
+    const ids = ["shoden", "chuden", "maiden"];
+    for(let i=0; i<3; i++) {
+      document.getElementById(ids[i]+"-chara").innerText = selected[i].name;
+      document.getElementById(ids[i]+"-quote").innerText = selected[i].quote;
+      document.getElementById(ids[i]+"-text").innerText = selected[i].desc;
+    }
     
-    // 中伝
-    document.getElementById("chuden-chara").innerText = selected[1].name;
-    document.getElementById("chuden-quote").innerText = selected[1].quote;
-    document.getElementById("chuden-text").innerText = selected[1].desc;
-    
-    // 末伝
-    document.getElementById("maiden-chara").innerText = selected[2].name;
-    document.getElementById("maiden-quote").innerText = selected[2].quote;
-    document.getElementById("maiden-text").innerText = selected[2].desc;
-    
-    // 結果ボックスを表示してカードを1枚ずつ時間差で出現させる
-    resultBox.classList.remove("hidden");
-    document.getElementById("card1").classList.add("reveal");
-    document.getElementById("card2").classList.add("reveal");
-    document.getElementById("card3").classList.add("reveal");
-
-    // フラッシュ用のアニメーションクラスを1.2秒後に消去（次回用にリセット）
-    setTimeout(() => {
-      document.body.classList.remove("flash-active");
-    }, 1200);
-    });
+    document.getElementById("result-box").classList.remove("hidden");
+    setTimeout(() => { document.body.classList.remove("flash-active"); }, 1200);
+  }, 1200);
+});
 </script>
 </body>
 </html>
