@@ -107,36 +107,60 @@ document.getElementById("divine-btn").addEventListener("click", () => {
   else if (query.match(/(友|達|人間関係|上司|部下|嫌|喧嘩|けんか|同僚|仲間)/)) type = "relation";
   else if (query.match(/(なく|無|探|どこ|落と|紛失|物|鍵|財布)/)) type = "lost";
 
-  const now = new Date();
-  
-  // 12種類の式神を完全に毎回ランダムシャッフルして3枚選ぶ（復活）
-  let deck = [...tenshoData];
-  let selected = [];
-  // 秒数と分数を使って毎回違うランダムな種を作る
-  let seed = now.getMinutes() + now.getSeconds() + now.getMilliseconds();
-  
-  for (let i = 0; i < 3; i++) {
-    let idx = (seed + i * 13) % deck.length;
-    selected.push(deck.splice(idx, 1)[0]);
-  }
+  const jishiList = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
-  // 安倍晴明風の自動解読テキストを組み立てる
-  let report = `「この悩み、事の始まりは【${selected[0].name}】が司り、${selected[0][type]}という因縁を孕む。道中、状況は【${selected[1].name}】へと変転し、${selected[1][type]}という宿命のプロセスを経るであろう。しかし恐れることなかれ、最終結末には【${selected[2].name}】が降臨し、${selected[2][type]}という必然の結末へとあなたを導くタイムラインなり。急急如律令！」`;
-
-  // 画面へ反映
-  document.getElementById("txt-time").innerText = now.toLocaleTimeString();
-  document.getElementById("txt-jishi").innerText = jishiList[Math.floor(((now.getHours()+1)%24)/2)];
-  document.getElementById("ai-report").innerText = report;
-
-  const ids = ["t1", "t2", "t3"];
-  for(let i=0; i<3; i++) {
-    document.getElementById(`${ids[i]}-name`).innerText = `${selected[i].name} [五行: ${selected[i].gogyo}]`;
-    document.getElementById(`${ids[i]}-desc`).innerText = selected[i][type];
-  }
+// 🔮 ボタンが押されたときの演出と占いの連動ロジック
+document.getElementById("divine-btn").addEventListener("click", () => {
+  // 1. 呪文画面を出現させる
+  const overlay = document.getElementById("spell-overlay");
+  overlay.classList.add("show");
   
-  document.getElementById("result-box").classList.remove("hidden");
-  // ページの上部へ自動スクロールして結果を見やすくする
-  window.scrollTo({ top: 300, behavior: 'smooth' });
+  // 2. 1.2秒（1200ミリ秒）の間、呪文を見せる
+  setTimeout(() => {
+    overlay.classList.remove("show"); // 呪文画面を消す
+    document.body.classList.add("flash-active"); // 画面をフワッと発光させる
+    
+    // 3. 占いの計算処理をスタート
+    const query = document.getElementById("user-query").value;
+    
+    let type = "general";
+    if (query.match(/(痛|病|治|体|健康|風邪|頭|熱|医|ケガ)/)) type = "health";
+    else if (query.match(/(恋|愛|好き|彼|彼女|結婚|復縁|付|出会)/)) type = "love";
+    else if (query.match(/(金|金運|金儲|金もち|給料|買|投資|財布|損|得)/)) type = "money";
+    else if (query.match(/(友|達|人間関係|上司|部下|嫌|喧嘩|けんか|同僚|仲間)/)) type = "relation";
+    else if (query.match(/(なく|無|探|どこ|落と|紛失|物|鍵|財布|失)/)) type = "lost";
+
+    const now = new Date();
+    let deck = [...tenshoData];
+    let selected = [];
+    let seed = now.getMinutes() + now.getSeconds() + now.getMilliseconds();
+    
+    for (let i = 0; i < 3; i++) {
+      let idx = (seed + i * 17) % deck.length;
+      selected.push(deck.splice(idx, 1)[0]);
+    }
+
+    // 4. 安倍晴明風のリポート文章を作成
+    let report = `「この悩み、事の始まりは【${selected[0].name}】が司り、${selected[0][type]}という因縁を孕む。道中、状況は【${selected[1].name}】へと変転し、${selected[1][type]}という宿命のプロセスを経るであろう。しかし恐れることなかれ、最終結末には【${selected[2].name}】が降臨し、${selected[2][type]}という必然の結末へとあなたを導くタイムラインなり。急急如律令！」`;
+
+    // 5. スマホ画面に反映させる
+    document.getElementById("txt-time").innerText = now.toLocaleTimeString();
+    document.getElementById("txt-jishi").innerText = jishiList[Math.floor(((now.getHours()+1)%24)/2)];
+    document.getElementById("ai-report").innerText = report;
+
+    const ids = ["t1", "t2", "t3"];
+    for(let i=0; i<3; i++) {
+      document.getElementById(`${ids[i]}-name`).innerText = `${selected[i].name} [五行: ${selected[i].gogyo}]`;
+      document.getElementById(`${ids[i]}-desc`).innerText = selected[i][type];
+    }
+    
+    // 結果ボックスを表示
+    document.getElementById("result-box").classList.remove("hidden");
+    
+    // 6. 発光エフェクトが終了したらクラスを外す（次回のため）
+    setTimeout(() => { document.body.classList.remove("flash-active"); }, 1200);
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  }, 1200);
 });
 </script>
 </body>
