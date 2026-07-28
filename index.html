@@ -22,32 +22,6 @@
     .app-container { max-width: 500px; margin: 0 auto; }
     h1 { font-size: 1.4rem; color: #c084fc; text-shadow: 0 0 10px rgba(192,132,252,0.4); margin-bottom: 5px; }
     .subtitle { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; }
-    
-    /* 🌌 復活：呪文カットイン画面 */
-    #spell-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9,10,22,0.95);
-      display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
-    }
-    #spell-overlay.show { opacity: 1; }
-    .spell-text { font-size: 2.3rem; font-weight: bold; color: #ef4444; margin: 10px; letter-spacing: 6px; text-shadow: 0 0 15px #ef4444; }
-    
-    .input-box { width: 100%; padding: 15px; font-size: 1rem; border-radius: 10px; border: 2px solid #4c1d95; background: #1e1b4b; color: #fff; box-sizing: border-box; margin-bottom: 15px; text-align: center; }
-    button { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: 1px solid #c084fc; padding: 15px; font-size: 1.1rem; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer; }
-    .hidden { display: none; }
-    .info-pane { margin: 15px 0; font-size: 0.85rem; background: #13152c; padding: 10px; border-radius: 10px; border: 1px solid #334155; }
-    .ai-bubble { background: #2e1065; border: 1px dashed #a855f7; padding: 15px; border-radius: 12px; text-align: left; margin: 15px 0; font-size: 0.9rem; line-height: 1.5; color: #e9d5ff; }
-    .card { background: #151833; border-radius: 16px; padding: 15px; margin: 15px 0; text-align: left; border-left: 6px solid #6366f1; }
-    .card-shoden { border-left-color: #38bdf8; } .card-chuden { border-left-color: #fb7185; } .card-maiden { border-left-color: #34d399; }
-    .badge { font-size: 0.75rem; background: #24294d; padding: 3px 8px; border-radius: 6px; display: inline-block; margin-bottom: 5px; color: #a78bfa; font-weight: bold; }
-    .card h3 { margin: 0 0 5px 0; font-size: 1.1rem; color: #fff; }
-    .desc { margin: 5px 0 0 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.4; }
-    
-    .guide-box { background: #111322; border: 1px solid #232742; border-radius: 12px; padding: 20px; text-align: left; margin-top: 30px; font-size: 0.85rem; line-height: 1.5; color: #cbd5e1; }
-    .guide-box h2 { font-size: 1rem; color: #c084fc; margin-top: 15px; border-bottom: 1px solid #312e81; padding-bottom: 5px; }
-    .guide-box h2:first-child { margin-top: 0; }
-    .guide-box ul { margin: 5px 0 15px 0; padding-left: 20px; }
-    .guide-box li { margin-bottom: 5px; }
   </style>
 </head>
 <body>
