@@ -244,7 +244,16 @@ const tenshoData = [
 
 const jishiList = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
-document.getElementById("divine-btn").addEventListener("click", () => {
+setTimeout(()=>{
+
+document.getElementById("result-box").classList.remove("hidden");
+
+window.scrollTo({
+top:300,
+behavior:"smooth"
+});
+
+},1100);
  const overlay=document.getElementById("spell-overlay");
 overlay.classList.add("show");
 document.body.classList.add("flash-active");
