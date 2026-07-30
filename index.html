@@ -261,7 +261,14 @@ if (overlay) {
     }, 1200);
 }
 
-  const query = document.getElementById("user-query").value;
+  const input = document.getElementById("user-query");
+
+if (!input) {
+    console.error("user-query が見つかりません");
+    return;
+}
+
+const query = input.value;
   let type = "general";
   if (query.match(/(痛|病|治|体|健康|風邪|頭|熱|医|ケガ)/)) type = "health";
   else if (query.match(/(恋|愛|好き|彼|彼女|結婚|復縁|付|出会)/)) type = "love";
